@@ -33,9 +33,10 @@ class SocketService {
 
     this.socket = io('http://localhost:3000', {
       auth: { token, refreshToken, type },
+      timeout: 45000,
       reconnection: true,
       reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
+      reconnectionDelay: 1000
     });
 
     this.setupDefaultListeners();
@@ -183,25 +184,45 @@ joinRoom(roomId) {
   }
 
   initializeCall(data) {
-    
-        if (!this.isConnected()) {
-            
-            return;
-        }
-
+    if (!this.isConnected()) {
+      return;
+    }
   
-
-        this.socket.timeout(1000).emit("initiate-call", {
-            recieverId: data.recieverId,
-            signalData: data.signalData,
-            from: data.from,
-            callerName: data.callerName,
-            callerAvatar: data.callerAvatar,
-            callerUserId: data.callerUserId
-        });
- 
-        console.log('[SocketService] Sending  call initiated event');
-}
+    this.socket.emit("initiate-call", {
+      recieverId: data.recieverId,
+      signalData: data.signalData,
+      from: data.from,
+      callerName: data.callerName,
+      callerAvatar: data.callerAvatar,
+      callerUserId: data.callerUserId
+    });
+  
+    // Set up handlers for the call initiation response
+    this.socket.once("call-failed", (error) => {
+      console.error("[SocketService] Call failed:", error);
+      // Handle call failure in your UI
+    });
+  }
+  
+  // Add this method to acknowledge incoming calls
+  acknowledgeCall(from) {
+    if (this.isConnected()) {
+      this.socket.emit("acknowledge-call", { from });
+    }
+  }
+  
+  // Update your incoming call handler to send acknowledgment
+  handleIncomingCall(callback) {
+    this.socket.on("incoming-call", (data) => {
+      // Send acknowledgment first
+      this.acknowledgeCall(data.from);
+      
+      // Then process the incoming call
+      if (callback) {
+        callback(data);
+      }
+    });
+  }
 
 answerCall(data) {
     
@@ -211,7 +232,7 @@ answerCall(data) {
         }
 
        
-        this.socket.timeout(1000).emit("answer-call", {
+        this.socket.emit("answer-call", {
             signalData: data.signalData,
             to: data.to
         });
