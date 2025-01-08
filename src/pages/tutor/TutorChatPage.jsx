@@ -21,7 +21,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "@/store/slices/userSlice";
 import axiosInstance from "@/config/axiosConfig";
 import { jwtDecode } from "jwt-decode";
-import Sidebar from "@/components/layout/tutor/sidebar";
+import Sidebar from "@/components/layout/tutor/Sidebar";
 import { selectTutor } from "@/store/slices/tutorSlice";
 import TypingIndicator from "@/components/utils/TypingIndicator";
 import toast from "react-hot-toast";
