@@ -204,25 +204,23 @@ joinRoom(roomId) {
     });
   }
   
-  // Add this method to acknowledge incoming calls
   acknowledgeCall(from) {
-    if (this.isConnected()) {
-      this.socket.emit("acknowledge-call", { from });
+    if (!this.isConnected()) {
+      return Promise.reject(new Error('Socket not connected'));
     }
-  }
-  
-  // Update your incoming call handler to send acknowledgment
-  handleIncomingCall(callback) {
-    this.socket.on("incoming-call", (data) => {
-      // Send acknowledgment first
-      this.acknowledgeCall(data.from);
-      
-      // Then process the incoming call
-      if (callback) {
-        callback(data);
-      }
+
+    return new Promise((resolve, reject) => {
+      this.socket.emit('acknowledge-call', { from }, (response) => {
+        if (response?.error) {
+          reject(new Error(response.error));
+        } else {
+          resolve(response);
+        }
+      });
     });
   }
+  
+  
 
 answerCall(data) {
     

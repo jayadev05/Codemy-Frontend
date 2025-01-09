@@ -81,7 +81,7 @@ const TutorManagement = () => {
 
       // Update application status
       const response = await axiosInstance.patch(
-        `/instructor-application/${applicationId}/approve`,
+        `/admin/instructor-application/${applicationId}/approve`,
         { status: action }
       );
 

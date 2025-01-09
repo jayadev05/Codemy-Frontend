@@ -333,8 +333,8 @@ const StudentManagement = () => {
               <div className="space-y-2">
                 <p className="font-semibold text-gray-900">Courses Enrolled:</p>
                 <p>
-                  {selectedStudent.coursesEnrolled
-                    ? selectedStudent.coursesEnrolled.length
+                  {selectedStudent.activeCourses
+                    ? selectedStudent.activeCourses.length
                     : 0}
                 </p>
               </div>

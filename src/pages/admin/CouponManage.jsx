@@ -237,6 +237,7 @@ const admin= useSelector(selectAdmin);
                   <Input
                     id="validTill"
                     type="datetime-local"
+                    min={new Date().toISOString().slice(0, 16)}
                     value={formData.validTill}
                     onChange={(e) => setFormData({ ...formData, validTill: e.target.value })}
                     required

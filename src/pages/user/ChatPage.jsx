@@ -83,16 +83,39 @@ export default function ChatInterface() {
 
   //handling video call
   useEffect(() => {
-    const handleIncomingCall = (data) => {
-      console.log("Incoming call from:", data.from);
-      setIncomingCallInfo({
-        isSomeoneCalling: true,
-        from: data.from,
-        callerData: data.callerData,
-        signalData: data.signalData,
-      });
+    
+    const handleIncomingCall = async (data) => {
+      try {
+        console.log("Incoming call from:", data.from);
+        
+        // First ensure we have valid data
+        if (!data?.from || !data?.callerData || !data?.signalData) {
+          console.error("Invalid incoming call data received");
+          return;
+        }
+    
+        // Acknowledge the call first
+        await socketService.acknowledgeCall(data.from);
+    
+        // Then update the UI state
+        setIncomingCallInfo({
+          isSomeoneCalling: true,
+          from: data.from,
+          callerData: data.callerData,
+          signalData: data.signalData,
+        });
+    
+      } catch (error) {
+        console.error("Error handling incoming call:", error);
+        // Optionally notify the caller about the failure
+        socketService.socket?.emit("call-failed", {
+          to: data.from,
+          reason: "Failed to process incoming call"
+        });
+      }
     };
 
+  
     const handleCallAccepted = ({ signalData }) => {
       setIsCallAccepted(true);
       setIsCalling(false);

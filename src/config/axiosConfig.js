@@ -1,10 +1,13 @@
 import axios from 'axios';
+import {store} from '../store/store'
+import { logoutUser } from '@/store/slices/userSlice';
 
 // Create an Axios instance
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:3000',
   withCredentials: true
 });
+
 
 // Add a request interceptor
 axiosInstance.interceptors.request.use(
@@ -39,7 +42,11 @@ axiosInstance.interceptors.response.use(
     if (error.response && error.response.status === 403) {
       
       console.error('Unauthorized! Redirecting to login...');
+
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      store.dispatch(clearUser(user));
+    
 
       window.location.href = '/login';
     }

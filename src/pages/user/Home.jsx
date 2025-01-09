@@ -100,7 +100,7 @@ export default function Home() {
   const handleAddToCart = async (courseId, price) => {
     try {
       const response = await axiosInstance.post(
-        "http://localhost:3000/course/cart",
+        "http://localhost:3000/user/cart",
         {
           courseId,
           userId: user._id,
@@ -130,7 +130,7 @@ export default function Home() {
   const fetchWishlist = async () => {
     try {
       const response = await axiosInstance.get(
-        "http://localhost:3000/course/wishlist",
+        "http://localhost:3000/user/wishlist",
         { params: { userId: user._id } }
       );
       setWishlist(response.data.wishlist);
@@ -153,7 +153,7 @@ export default function Home() {
   const handleWishlist = async (id) => {
     try {
       const response = await axiosInstance.post(
-        "http://localhost:3000/course/wishlist",
+        "http://localhost:3000/user/wishlist",
         {
           userId: user._id,
           courseId: id,

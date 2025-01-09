@@ -128,12 +128,15 @@ const BillingPage = () => {
   };
 
   const paginatedOrders = paginateData(orders);
+
   const totalRevenue = orders
     .filter((order) => order.orderStatus === "Completed")
     .reduce((acc, order) => acc + order.totalAmount, 0);
+
   const totalCoursesSold = orders.filter(
     (order) => order.orderStatus === "Completed"
   ).length;
+
   const pendingOrders = orders.filter(
     (order) => order.orderStatus === "Pending"
   ).length;
