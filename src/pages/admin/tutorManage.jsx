@@ -57,10 +57,8 @@ const TutorManagement = () => {
   const fetchTutorsAndApplications = async () => {
     try {
       const [tutorsResponse, applicationsResponse] = await Promise.all([
-        axiosInstance.get("http://localhost:3000/admin/tutors"),
-        axiosInstance.get(
-          "http://localhost:3000/admin/instructor-applications"
-        ),
+        axiosInstance.get("/admin/tutors"),
+        axiosInstance.get("/admin/instructor-applications"),
       ]);
 
       // Ensure we have a clean list of tutors and applications
@@ -126,8 +124,8 @@ const TutorManagement = () => {
     try {
       const endpoint =
         currentStatus === false
-          ? `http://localhost:3000/admin/tutor/${id}/list`
-          : `http://localhost:3000/admin/tutor/${id}/unlist`;
+          ? `/admin/tutor/${id}/list`
+          : `/admin/tutor/${id}/unlist`;
 
       const result = await axiosInstance.put(endpoint);
 

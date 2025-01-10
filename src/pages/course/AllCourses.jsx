@@ -86,9 +86,7 @@ export default function CourseListing() {
 
   const fetchCategories = async () => {
     try {
-      const response = await axiosInstance.get(
-        "http://localhost:3000/admin/categories"
-      );
+      const response = await axiosInstance.get("/admin/categories");
       setCategories(response.data);
     } catch (error) {
       console.log(error);
@@ -102,10 +100,9 @@ export default function CourseListing() {
 
   const fetchWishlist = async () => {
     try {
-      const response = await axiosInstance.get(
-        "http://localhost:3000/user/wishlist",
-        { params: { userId: user._id } }
-      );
+      const response = await axiosInstance.get("/user/wishlist", {
+        params: { userId: user._id },
+      });
       setWishlist(response.data.wishlist);
       dispatch(setWishlistItems(response.data.wishlist));
     } catch (error) {
@@ -115,18 +112,15 @@ export default function CourseListing() {
 
   const fetchCourses = async () => {
     try {
-      const response = await axiosInstance.get(
-        "/course/courses/basic-info",
-        {
-          params: {
-            search: searchQuery,
-            sortBy,
-            page,
-            limit: 8,
-            ...filters,
-          },
-        }
-      );
+      const response = await axiosInstance.get("/course/courses/basic-info", {
+        params: {
+          search: searchQuery,
+          sortBy,
+          page,
+          limit: 8,
+          ...filters,
+        },
+      });
 
       if (page === 1) {
         setCourses(response.data.courses);
@@ -296,13 +290,10 @@ export default function CourseListing() {
 
   const handleWishlist = async (id) => {
     try {
-      const response = await axiosInstance.post(
-        "http://localhost:3000/user/wishlist",
-        {
-          userId: user._id,
-          courseId: id,
-        }
-      );
+      const response = await axiosInstance.post("/user/wishlist", {
+        userId: user._id,
+        courseId: id,
+      });
 
       if (response.status === 200) {
         toast.success("Course added to wishlist!");
@@ -327,13 +318,10 @@ export default function CourseListing() {
 
   const handleAddToCart = async (courseId, price) => {
     try {
-      const response = await axiosInstance.post(
-        "http://localhost:3000/user/cart",
-        {
-          courseId,
-          userId: user._id,
-        }
-      );
+      const response = await axiosInstance.post("/user/cart", {
+        courseId,
+        userId: user._id,
+      });
 
       dispatch(addToCart({ courseId, price }));
 

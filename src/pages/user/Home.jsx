@@ -83,7 +83,7 @@ export default function Home() {
   const fetchCourses = async () => {
     try {
       const response = await axiosInstance.get(
-        "http://localhost:3000/course/courses/basic-info"
+        "/course/courses/basic-info"
       );
       setCourses(response.data.courses);
     } catch (error) {
@@ -100,7 +100,7 @@ export default function Home() {
   const handleAddToCart = async (courseId, price) => {
     try {
       const response = await axiosInstance.post(
-        "http://localhost:3000/user/cart",
+        "/user/cart",
         {
           courseId,
           userId: user._id,
@@ -130,7 +130,7 @@ export default function Home() {
   const fetchWishlist = async () => {
     try {
       const response = await axiosInstance.get(
-        "http://localhost:3000/user/wishlist",
+        "/user/wishlist",
         { params: { userId: user._id } }
       );
       setWishlist(response.data.wishlist);
@@ -163,7 +163,7 @@ export default function Home() {
   const handleWishlist = async (id) => {
     try {
       const response = await axiosInstance.post(
-        "http://localhost:3000/user/wishlist",
+        "/user/wishlist",
         {
           userId: user._id,
           courseId: id,

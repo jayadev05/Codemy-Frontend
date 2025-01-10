@@ -193,10 +193,7 @@ const LessonAddModal = ({
       const payload = { ...lessonData };
       console.log("payload", payload);
 
-      const response = await axiosInstance.post(
-        "http://localhost:3000/course/lessons",
-        payload
-      );
+      const response = await axiosInstance.post("/course/lessons", payload);
 
       toast.success("Lesson added successfully");
       onLessonAdd(response.data.lesson);

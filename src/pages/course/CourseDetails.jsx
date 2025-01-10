@@ -53,13 +53,10 @@ export default function CourseDetails() {
 
   const handleAddToCart = async (courseId, price) => {
     try {
-      const response = await axiosInstance.post(
-        "http://localhost:3000/user/cart",
-        {
-          courseId,
-          userId: user._id,
-        }
-      );
+      const response = await axiosInstance.post("/user/cart", {
+        courseId,
+        userId: user._id,
+      });
 
       dispatch(addToCart({ courseId, price }));
 
@@ -83,13 +80,10 @@ export default function CourseDetails() {
 
   const handleBuy = async (courseId, price) => {
     try {
-      const response = await axiosInstance.post(
-        "http://localhost:3000/user/cart",
-        {
-          courseId,
-          userId: user._id,
-        }
-      );
+      const response = await axiosInstance.post("/user/cart", {
+        courseId,
+        userId: user._id,
+      });
 
       dispatch(addToCart({ courseId, price }));
       navigate("/user/cart");
@@ -105,12 +99,9 @@ export default function CourseDetails() {
 
   const fetchCourse = async () => {
     try {
-      const response = await axiosInstance.get(
-        `http://localhost:3000/course/courses/basic-info`,
-        {
-          params: { courseId },
-        }
-      );
+      const response = await axiosInstance.get(`/course/courses/basic-info`, {
+        params: { courseId },
+      });
 
       console.log("response:", response.data);
 
@@ -159,13 +150,10 @@ export default function CourseDetails() {
 
   const handleWishlist = async (id) => {
     try {
-      const response = await axiosInstance.post(
-        "http://localhost:3000/user/wishlist",
-        {
-          userId: user._id,
-          courseId: id,
-        }
-      );
+      const response = await axiosInstance.post("/user/wishlist", {
+        userId: user._id,
+        courseId: id,
+      });
 
       if (response.status === 200) {
         toast.success("Course added to wishlist!");
@@ -184,10 +172,9 @@ export default function CourseDetails() {
 
   const fetchWishlist = async () => {
     try {
-      const response = await axiosInstance.get(
-        "http://localhost:3000/user/wishlist",
-        { params: { userId: user._id } }
-      );
+      const response = await axiosInstance.get("/user/wishlist", {
+        params: { userId: user._id },
+      });
       setWishlist(response.data.wishlist);
       dispatch(setWishlistItems(response.data.wishlist));
     } catch (error) {

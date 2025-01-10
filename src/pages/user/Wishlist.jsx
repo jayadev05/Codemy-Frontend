@@ -29,10 +29,9 @@ const WishlistPage = () => {
 
   const handleRemoveItem = async (productId) => {
     try {
-      const response = await axios.delete(
-        "http://localhost:3000/user/wishlist/remove",
-        { params: { userId: user._id, courseId: productId } }
-      );
+      const response = await axios.delete("/user/wishlist/remove", {
+        params: { userId: user._id, courseId: productId },
+      });
       dispatch(removeFromWishlist(productId));
       toast.success("removed from wishlist");
     } catch (error) {
@@ -43,7 +42,7 @@ const WishlistPage = () => {
 
   const handleAddToCart = async (courseId, price) => {
     try {
-      const response = await axios.post("http://localhost:3000/user/cart", {
+      const response = await axios.post("/user/cart", {
         courseId,
         userId: user._id,
       });

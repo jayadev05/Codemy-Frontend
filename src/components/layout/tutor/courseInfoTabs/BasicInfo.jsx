@@ -4,7 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import axiosInstance from "@/config/axiosConfig";
 
-function BasicInfo({ initialData, sendData,errors }) {
+function BasicInfo({ initialData, sendData, errors }) {
   // Use initialData to set initial state values
   const [title, setTitle] = useState(initialData?.title || "");
   const [topic, setTopic] = useState(initialData?.topic || "");
@@ -54,9 +54,7 @@ function BasicInfo({ initialData, sendData,errors }) {
 
   const fetchCategories = async () => {
     try {
-      const response = await axiosInstance.get(
-        "http://localhost:3000/admin/categories"
-      );
+      const response = await axiosInstance.get("/admin/categories");
       setCategories(response.data);
     } catch (error) {
       console.log(error);
@@ -67,7 +65,6 @@ function BasicInfo({ initialData, sendData,errors }) {
       }
     }
   };
-
 
   // Handlers for select changes
   const handleCategoryChange = (e) => {
@@ -99,7 +96,11 @@ function BasicInfo({ initialData, sendData,errors }) {
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">
             {title.length}/50
           </span>
-          {errors?.basicInfo?.title && <span className="text-red-500 text-sm">{errors?.basicInfo?.title}</span>}
+          {errors?.basicInfo?.title && (
+            <span className="text-red-500 text-sm">
+              {errors?.basicInfo?.title}
+            </span>
+          )}
         </div>
       </div>
 
@@ -123,7 +124,6 @@ function BasicInfo({ initialData, sendData,errors }) {
         </div>
       </div>
 
-      
       <div>
         <label className="block mb-2 font-medium">Course Topic</label>
         <div className="relative">
@@ -139,7 +139,11 @@ function BasicInfo({ initialData, sendData,errors }) {
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">
             {topic.length}/100
           </span>
-          {errors?.basicInfo?.topic && <span className="text-red-500 text-sm">{errors?.basicInfo?.topic}</span>}
+          {errors?.basicInfo?.topic && (
+            <span className="text-red-500 text-sm">
+              {errors?.basicInfo?.topic}
+            </span>
+          )}
         </div>
       </div>
 

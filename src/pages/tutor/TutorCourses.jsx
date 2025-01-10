@@ -35,7 +35,7 @@ export default function TutorCourses() {
   const fetchmyCourses = async () => {
     try {
       const response = await axiosInstance.get(
-        `http://localhost:3000/course/tutor-courses/${tutor._id}`,
+        `/course/tutor-courses/${tutor._id}`,
         { params: { sortBy } }
       );
       setCourses(response.data.courses);
@@ -55,9 +55,7 @@ export default function TutorCourses() {
 
   const handleViewCourse = async (id) => {
     try {
-      const response = await axiosInstance.get(
-        `http://localhost:3000/course/course/${id}`
-      );
+      const response = await axiosInstance.get(`/course/course/${id}`);
 
       dispatch(addCourse(response.data.data));
 
@@ -72,9 +70,7 @@ export default function TutorCourses() {
 
   const handleEditCourse = async (id) => {
     try {
-      const response = await axiosInstance.get(
-        `http://localhost:3000/course/course/${id}`
-      );
+      const response = await axiosInstance.get(`/course/course/${id}`);
 
       dispatch(addCourse(response.data.data));
 
@@ -97,7 +93,7 @@ export default function TutorCourses() {
       console.log(courseToDelete);
       if (courseToDelete) {
         await axiosInstance.delete(
-          `http://localhost:3000/course/course?courseId=${courseToDelete}&tutorId=${tutorId}`
+          `/course/course?courseId=${courseToDelete}&tutorId=${tutorId}`
         );
 
         setDeleteModal(false);
@@ -136,7 +132,7 @@ export default function TutorCourses() {
       </div>
 
       <main className="w-full">
-      <TutorHeader heading="My Courses"/>
+        <TutorHeader heading="My Courses" />
 
         <div className="my-6 ml-24 flex gap-4">
           <select

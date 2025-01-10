@@ -46,7 +46,7 @@ const PurchaseHistory = () => {
       try {
         setIsLoading(true);
         const response = await axiosInstance.get(
-          `http://localhost:3000/checkout/orders/${user._id}/history`
+          `/checkout/orders/${user._id}/history`
         );
         setOrders(response.data.data);
         setError(null);
@@ -93,7 +93,7 @@ const PurchaseHistory = () => {
           },
           escape: true, // Allows escape key to close the modal
           animation: true, // Enables smooth animations
-          backdropClose: true // Allows clicking outside to close
+          backdropClose: true, // Allows clicking outside to close
         },
         theme: {
           color: "#fa7516",
@@ -102,17 +102,16 @@ const PurchaseHistory = () => {
         prefill: {
           // Add prefill if you have user details
           email: user.email,
-          contact: user.phone
+          contact: user.phone,
         },
         notes: {
-          orderId: order.orderId
-        }
+          orderId: order.orderId,
+        },
       };
-  
+
       // Create and open Razorpay instance
       const razorpay = new window.Razorpay(options);
       razorpay.open();
-  
     } catch (error) {
       console.error("Failed to retry payment:", error);
       setError("Failed to retry payment. Please try again later.");
@@ -125,10 +124,11 @@ const PurchaseHistory = () => {
       const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
         paymentResponse;
 
-      const response = await axiosInstance.post(
-        "http://localhost:3000/checkout/payment/verify",
-        { razorpay_order_id, razorpay_payment_id, razorpay_signature }
-      );
+      const response = await axiosInstance.post("/checkout/payment/verify", {
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature,
+      });
 
       if (response.status === 200) {
         console.log(response, "asdasd");

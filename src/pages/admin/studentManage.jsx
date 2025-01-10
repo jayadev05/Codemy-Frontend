@@ -32,10 +32,9 @@ const StudentManagement = () => {
 
   const fetchStudents = async () => {
     try {
-      const response = await axiosInstance.get(
-        "http://localhost:3000/admin/students",
-        { withCredentials: true }
-      );
+      const response = await axiosInstance.get("/admin/students", {
+        withCredentials: true,
+      });
       console.log("response data length ", response.data.students.length);
       setStudents(response.data.students || []);
     } catch (err) {
@@ -101,8 +100,8 @@ const StudentManagement = () => {
     try {
       const endpoint =
         currentStatus === false
-          ? `http://localhost:3000/admin/user/${id}/list`
-          : `http://localhost:3000/admin/user/${id}/unlist`;
+          ? `/admin/user/${id}/list`
+          : `/admin/user/${id}/unlist`;
 
       const result = await axiosInstance.put(endpoint, {
         withCredentials: true,
@@ -131,7 +130,7 @@ const StudentManagement = () => {
 
   const onLogout = () => {
     try {
-      const response = axiosInstance.post("http://localhost:3000/admin/auth/logout");
+      const response = axiosInstance.post("/admin/auth/logout");
 
       dispatch(logoutAdmin(admin));
 

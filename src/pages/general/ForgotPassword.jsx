@@ -36,7 +36,7 @@ export default function ForgotPassword() {
     try {
       setLoading(true);
       const response = await axiosInstance.post(
-        "http://localhost:3000/admin/auth/forgot-password",
+        "/admin/auth/forgot-password",
         { email },
         {
           headers: {
@@ -47,7 +47,7 @@ export default function ForgotPassword() {
       );
 
       // Handle successful responses
-      if (response?.status===200) {
+      if (response?.status === 200) {
         toast.success(
           response.data.message ||
             "Password reset link has been sent to your email"
@@ -60,13 +60,11 @@ export default function ForgotPassword() {
     } catch (error) {
       // Comprehensive error handling
       if (error.response) {
-        
         const errorMessage =
           error.response.data?.message ||
           "An unexpected error occurred while processing your request";
 
         toast.error(errorMessage);
-        
       } else if (error.request) {
         // The request was made but no response was received
         toast.error(
@@ -85,7 +83,6 @@ export default function ForgotPassword() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-    
       {/* Header */}
       <header className="flex justify-between items-center px-6 py-4 bg-white">
         <div className="flex items-center gap-1">

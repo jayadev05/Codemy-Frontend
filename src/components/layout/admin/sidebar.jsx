@@ -1,39 +1,50 @@
-'use client'
+"use client";
 
-import React from "react"
-import { LayoutDashboard, Users, GraduationCap, CreditCard, Settings, Ticket, LogOut, LayoutList, MessageCircleWarning, Menu } from 'lucide-react'
-import { useDispatch, useSelector } from "react-redux"
-import { logoutAdmin, selectAdmin } from "../../../store/slices/adminSlice"
-import defProfile from "../../../assets/user-profile.png"
-import { useNavigate } from "react-router"
-import { toast } from "react-hot-toast"
-import axios from 'axios'
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Button } from "@/components/ui/button"
+import React from "react";
+import {
+  LayoutDashboard,
+  Users,
+  GraduationCap,
+  CreditCard,
+  Settings,
+  Ticket,
+  LogOut,
+  LayoutList,
+  MessageCircleWarning,
+  Menu,
+} from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutAdmin, selectAdmin } from "../../../store/slices/adminSlice";
+import defProfile from "../../../assets/user-profile.png";
+import { useNavigate } from "react-router";
+import { toast } from "react-hot-toast";
+import axios from "axios";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
   SidebarFooter,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 
 const AdminSidebar = ({ activeSection }) => {
-  const admin = useSelector(selectAdmin)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const [isMobileOpen, setIsMobileOpen] = React.useState(false)
+  const admin = useSelector(selectAdmin);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [isMobileOpen, setIsMobileOpen] = React.useState(false);
 
   const onLogout = async () => {
     try {
-      await axios.post("http://localhost:3000/admin/auth/logout")
-      dispatch(logoutAdmin(admin))
-      toast.success("Logged out successfully")
-      navigate('/login')
+      await axios.post("/admin/auth/logout");
+      dispatch(logoutAdmin(admin));
+      toast.success("Logged out successfully");
+      navigate("/login");
     } catch (error) {
-      console.log(error.message)
-      toast.error(error.message || "Error Logging out user")
+      console.log(error.message);
+      toast.error(error.message || "Error Logging out user");
     }
-  }
+  };
 
   const menuItems = [
     {
@@ -78,7 +89,7 @@ const AdminSidebar = ({ activeSection }) => {
       href: "/admin/offer-management",
       isActive: activeSection === "Coupons",
     },
-  ]
+  ];
 
   const SidebarContent = () => (
     <div className="flex h-screen w-full flex-col bg-gray-900">
@@ -99,8 +110,8 @@ const AdminSidebar = ({ activeSection }) => {
           <a
             key={item.title}
             onClick={() => {
-              navigate(`${item.href}`)
-              setIsMobileOpen(false)
+              navigate(`${item.href}`);
+              setIsMobileOpen(false);
             }}
             className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors cursor-pointer ${
               item.isActive
@@ -123,7 +134,7 @@ const AdminSidebar = ({ activeSection }) => {
         </button>
       </div>
     </div>
-  )
+  );
 
   return (
     <>
@@ -148,8 +159,7 @@ const AdminSidebar = ({ activeSection }) => {
         <SidebarContent />
       </div>
     </>
-  )
-}
+  );
+};
 
-export default AdminSidebar
-
+export default AdminSidebar;

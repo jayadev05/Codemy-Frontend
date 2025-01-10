@@ -64,10 +64,7 @@ export default function EmailVerify({ formData, setIsModalVisible }) {
         otp: otpString,
       };
 
-      const response = await axiosInstance.post(
-        "http://localhost:3000/user/users",
-        requestPayload
-      );
+      const response = await axiosInstance.post("/user/users", requestPayload);
 
       toast.success(
         "Account created successfully! You can login with the credentials"
@@ -89,7 +86,7 @@ export default function EmailVerify({ formData, setIsModalVisible }) {
 
     try {
       setLoading(true);
-      const response = await axios.post("http://localhost:3000/user/otp/send", {
+      const response = await axios.post("/user/otp/send", {
         email: formData.email,
       });
 

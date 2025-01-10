@@ -282,14 +282,11 @@ export default function TutorSettings() {
 
     try {
       // Check for existing phone or username
-      const existCheck = await axiosInstance.post(
-        "http://localhost:3000/admin/auth/check-mail",
-        {
-          phone: personalInfo.phone,
-          username: personalInfo.userName,
-          userId: tutor._id,
-        }
-      );
+      const existCheck = await axiosInstance.post("/admin/auth/check-mail", {
+        phone: personalInfo.phone,
+        username: personalInfo.userName,
+        userId: tutor._id,
+      });
 
       const { phoneExists, userNameExists } = existCheck.data;
 
@@ -316,10 +313,7 @@ export default function TutorSettings() {
       }
 
       // If no validation errors, proceed with update
-      const response = await axiosInstance.put(
-        "http://localhost:3000/tutor/profile",
-        personalInfo
-      );
+      const response = await axiosInstance.put("/tutor/profile", personalInfo);
 
       // Success handling
       toast.success(response.data.message || "Details Updated successfully", {
@@ -373,10 +367,9 @@ export default function TutorSettings() {
     if (!validatePasswordForm()) return;
 
     try {
-      const response = await axiosInstance.put(
-        "http://localhost:3000/tutor/password",
-        { passwordChange }
-      );
+      const response = await axiosInstance.put("/tutor/password", {
+        passwordChange,
+      });
       toast.success(response.data.message || "Password changed successfully", {
         style: {
           borderRadius: "10px",
@@ -419,7 +412,7 @@ export default function TutorSettings() {
       {/* Main content */}
       <main className="flex-grow overflow-x-hidden">
         {/* Header - Now full width */}
-        <TutorHeader heading="Settings and Profile"/>
+        <TutorHeader heading="Settings and Profile" />
 
         {/* Settings content - Now with responsive padding */}
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">

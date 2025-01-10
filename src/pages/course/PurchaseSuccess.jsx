@@ -16,7 +16,7 @@ const PurchaseCompleted = () => {
     const fetchOrderDetails = async () => {
       try {
         const response = await axiosInstance.get(
-          `http://localhost:3000/checkout/order/${orderId}/details`
+          `/checkout/order/${orderId}/details`
         );
 
         setOrder(response.data.order);

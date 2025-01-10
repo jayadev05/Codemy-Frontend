@@ -1,25 +1,24 @@
-import React, { useState } from 'react';
-import { X, Upload } from 'lucide-react';
-import { toast } from 'react-hot-toast';
-import axios from 'axios';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../../../store/slices/userSlice';
-import axiosInstance from '@/config/axiosConfig';
+import React, { useState } from "react";
+import { X, Upload } from "lucide-react";
+import { toast } from "react-hot-toast";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../../store/slices/userSlice";
+import axiosInstance from "@/config/axiosConfig";
 
 export function InstructorModal({ onClose }) {
-
   const FULLNAME_REGEX = /^[A-Za-z]+(?:\s[A-Za-z]+|\s[A-Z]\.?)+$/;
 
-  const user=useSelector(selectUser);
+  const user = useSelector(selectUser);
 
   // State for form data
   const [formData, setFormData] = useState({
-    fullName: '',
-    email:user.email,
-    phone: '',
-    field:'',
-    experience: '',
-    certificates: null
+    fullName: "",
+    email: user.email,
+    phone: "",
+    field: "",
+    experience: "",
+    certificates: null,
   });
 
   // State for form errors and submission status
@@ -32,22 +31,24 @@ export function InstructorModal({ onClose }) {
 
     // Full Name Validation
     if (!formData.fullName.trim()) {
-      newErrors.fullName = 'Full name is required';
+      newErrors.fullName = "Full name is required";
+    } else if (!FULLNAME_REGEX.test(formData.fullName)) {
+      newErrors.fullName = "Please Enter a real name with atleast 5 characters";
     }
-    else if (!FULLNAME_REGEX.test(formData.fullName)) {
-      newErrors.fullName = 'Please Enter a real name with atleast 5 characters';
-    }
-  
+
     // Phone Validation
     if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required';
-    }
-    else if(!/^(?!0{10}$)\d{10}$/.test(formData.phone)) newErrors.phone="Enter a valid mobile number"
+      newErrors.phone = "Phone number is required";
+    } else if (!/^(?!0{10}$)\d{10}$/.test(formData.phone))
+      newErrors.phone = "Enter a valid mobile number";
 
-    if(!formData.experience.trim()) newErrors.experience="Experience is a must"
-    else if(formData.experience.trim().length<10) newErrors.experience="Enter atleast 10-20 characters"
+    if (!formData.experience.trim())
+      newErrors.experience = "Experience is a must";
+    else if (formData.experience.trim().length < 10)
+      newErrors.experience = "Enter atleast 10-20 characters";
 
-    if(!formData.field.trim()) newErrors.field="Please Enter your field of expertise"
+    if (!formData.field.trim())
+      newErrors.field = "Please Enter your field of expertise";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -56,61 +57,60 @@ export function InstructorModal({ onClose }) {
   // Handle input changes
   const handleInputChange = (e) => {
     const { name, value, type, files } = e.target;
-    
-    setFormData(prev => ({
+
+    setFormData((prev) => ({
       ...prev,
-      [type === 'file' ? name : name]: type === 'file' ? files : value
+      [type === "file" ? name : name]: type === "file" ? files : value,
     }));
   };
-
 
   // Submit application handler
   const submitInstructorApplication = async (e) => {
     e.preventDefault();
-    
+
     // Validate form
-   if(!validateForm()) {
-    return
-   };
-    
-   
+    if (!validateForm()) {
+      return;
+    }
+
     setIsSubmitting(true);
-  
+
     try {
       // Prepare form data
       const formSubmission = new FormData();
-      
+
       Object.entries(formData).forEach(([key, value]) => {
-        if (key === 'certificates' && value) {
-          Array.from(value).forEach(file => {
-            formSubmission.append('certificates', file);
+        if (key === "certificates" && value) {
+          Array.from(value).forEach((file) => {
+            formSubmission.append("certificates", file);
           });
-        } else if (key !== 'certificates') {
-          formSubmission.append(key, value || '');
+        } else if (key !== "certificates") {
+          formSubmission.append(key, value || "");
         }
       });
-  
+
       // Submit application
       await axiosInstance.post(
-        'http://localhost:3000/admin/instructor-applications', 
+        "/admin/instructor-applications",
         formSubmission,
         {
           headers: {
-            'Content-Type': 'multipart/form-data'
-          }
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
-  
-      toast.success('Application submitted successfully!');
+
+      toast.success("Application submitted successfully!");
       onClose();
     } catch (error) {
       // Comprehensive error handling
-      const errorMessage = error.response?.data?.message || 
-                           error.response?.data?.errors || 
-                           'Application submission failed';
-      
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.errors ||
+        "Application submission failed";
+
       toast.error(errorMessage);
-      console.error('Submission error:', error);
+      console.error("Submission error:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -150,17 +150,16 @@ export function InstructorModal({ onClose }) {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {errors.fullName && (
-                <span className="text-red-500 text-sm">
-                  {errors.fullName}
-                </span>
+                <span className="text-red-500 text-sm">{errors.fullName}</span>
               )}
             </div>
-            
-            
 
             {/* Phone Input */}
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Phone Number
               </label>
               <input
@@ -173,16 +172,17 @@ export function InstructorModal({ onClose }) {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {errors.phone && (
-                <span className="text-red-500 text-sm">
-                  {errors.phone}
-                </span>
+                <span className="text-red-500 text-sm">{errors.phone}</span>
               )}
             </div>
 
             {/* Expertise Input */}
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-               Field of Expertise
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Field of Expertise
               </label>
               <input
                 type="text"
@@ -194,15 +194,16 @@ export function InstructorModal({ onClose }) {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {errors.field && (
-                <span className="text-red-500 text-sm">
-                  {errors.field}
-                </span>
+                <span className="text-red-500 text-sm">{errors.field}</span>
               )}
             </div>
 
             {/* Experience Textarea */}
             <div>
-              <label htmlFor="experience" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="experience"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Experience
               </label>
               <textarea
@@ -216,30 +217,31 @@ export function InstructorModal({ onClose }) {
               />
             </div>
             {errors.experience && (
-                <span className="text-red-500 text-sm">
-                  {errors.experience}
-                </span>
-              )}
+              <span className="text-red-500 text-sm">{errors.experience}</span>
+            )}
 
             {/* Certificates Upload */}
             <div>
-              <label htmlFor="certificates" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="certificates"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Certificates (optional)
               </label>
               <div className="mt-1 flex justify-between items-center px-3 py-2 border border-gray-300 rounded-md">
                 <span className="text-sm text-gray-500">
-                  {formData.certificates 
-                    ? `${formData.certificates.length} file(s) selected` 
-                    : 'Upload relevant certificates'}
+                  {formData.certificates
+                    ? `${formData.certificates.length} file(s) selected`
+                    : "Upload relevant certificates"}
                 </span>
                 <label htmlFor="file-upload" className="cursor-pointer">
                   <Upload className="h-5 w-5 text-gray-400" />
                 </label>
-                <input 
-                  id="file-upload" 
-                  name="certificates" 
-                  type="file" 
-                  className="sr-only" 
+                <input
+                  id="file-upload"
+                  name="certificates"
+                  type="file"
+                  className="sr-only"
                   onChange={handleInputChange}
                   multiple
                 />
@@ -251,25 +253,25 @@ export function InstructorModal({ onClose }) {
               type="submit"
               disabled={isSubmitting}
               className={`w-full text-white py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 flex items-center justify-center ${
-                isSubmitting 
-                  ? 'bg-gray-400 cursor-not-allowed' 
-                  : 'bg-orange-500 hover:bg-orange-600 focus:ring-orange-500'
+                isSubmitting
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-orange-500 hover:bg-orange-600 focus:ring-orange-500"
               }`}
             >
-              {isSubmitting ? 'Submitting...' : 'Submit Application'}
+              {isSubmitting ? "Submitting..." : "Submit Application"}
               {!isSubmitting && (
-                <svg 
-                  className="w-4 h-4 ml-2" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24" 
+                <svg
+                  className="w-4 h-4 ml-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M9 5l7 7-7 7" 
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
                   />
                 </svg>
               )}

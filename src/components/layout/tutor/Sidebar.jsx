@@ -1,55 +1,72 @@
-'use client'
+"use client";
 
-import React, { useEffect, useState } from "react"
-import { LayoutDashboard, Users, GraduationCap, CreditCard, Settings, Ticket, LogOut, MessageCircle, Menu, X } from 'lucide-react'
-import { useDispatch, useSelector } from "react-redux"
-import defProfile from "../../../assets/user-profile.png"
-import { useNavigate } from "react-router"
-import { toast } from "react-hot-toast"
-import { logoutTutor, selectTutor } from "../../../store/slices/tutorSlice"
-import axios from "axios"
-import logo from "../../../assets/logo_cap.png"
-import axiosInstance from "@/config/axiosConfig"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { Button } from "@/components/ui/button"
+import React, { useEffect, useState } from "react";
+import {
+  LayoutDashboard,
+  Users,
+  GraduationCap,
+  CreditCard,
+  Settings,
+  Ticket,
+  LogOut,
+  MessageCircle,
+  Menu,
+  X,
+} from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import defProfile from "../../../assets/user-profile.png";
+import { useNavigate } from "react-router";
+import { toast } from "react-hot-toast";
+import { logoutTutor, selectTutor } from "../../../store/slices/tutorSlice";
+import axios from "axios";
+import logo from "../../../assets/logo_cap.png";
+import axiosInstance from "@/config/axiosConfig";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 
 const Sidebar = ({ activeSection }) => {
-  const tutor = useSelector(selectTutor)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const [chats, setChats] = useState([])
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const tutor = useSelector(selectTutor);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [chats, setChats] = useState([]);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const messageCount = chats.reduce((sum, chat) => {
-    return sum + (chat.unreadCount?.tutor || 0)
-  }, 0)
+    return sum + (chat.unreadCount?.tutor || 0);
+  }, 0);
 
   useEffect(() => {
-    fetchChats()
-  }, [])
+    fetchChats();
+  }, []);
 
   const fetchChats = async () => {
     try {
-      const response = await axiosInstance.get(`/chat/chats/${tutor._id}`)
-      setChats(response.data)
+      const response = await axiosInstance.get(`/chat/chats/${tutor._id}`);
+      setChats(response.data);
     } catch (error) {
-      console.error("Error fetching chats:", error)
+      console.error("Error fetching chats:", error);
     }
-  }
+  };
 
   const onLogout = () => {
     try {
-      const response = axios.post("http://localhost:3000/tutor/auth/logout")
-      dispatch(logoutTutor(tutor))
+      const response = axios.post("/tutor/auth/logout");
+      dispatch(logoutTutor(tutor));
       toast.success("Logged out successfully", {
         style: { borderRadius: "10px", background: "#111826", color: "#fff" },
-      })
-      navigate("/login")
+      });
+      navigate("/login");
     } catch (error) {
-      console.log(error.message)
-      toast.error(error.message || "Error Logging out user")
+      console.log(error.message);
+      toast.error(error.message || "Error Logging out user");
     }
-  }
+  };
 
   const menuItems = [
     {
@@ -82,7 +99,7 @@ const Sidebar = ({ activeSection }) => {
       href: "/tutor/settings",
       isActive: activeSection === "Settings and profile",
     },
-  ]
+  ];
 
   const NavigationItems = ({ onItemClick = () => {} }) => (
     <>
@@ -90,8 +107,8 @@ const Sidebar = ({ activeSection }) => {
         <a
           key={item.title}
           onClick={() => {
-            navigate(`${item.href}`)
-            onItemClick()
+            navigate(`${item.href}`);
+            onItemClick();
           }}
           className={`flex items-center cursor-pointer gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
             item.isActive
@@ -101,15 +118,17 @@ const Sidebar = ({ activeSection }) => {
         >
           <item.icon className="h-5 w-5" />
           {item.title}
-          {activeSection !== 'Messages' && item.title === "Messages" && messageCount > 0 && (
-            <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-xs font-semibold text-white">
-              {messageCount}
-            </span>
-          )}
+          {activeSection !== "Messages" &&
+            item.title === "Messages" &&
+            messageCount > 0 && (
+              <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-xs font-semibold text-white">
+                {messageCount}
+              </span>
+            )}
         </a>
       ))}
     </>
-  )
+  );
 
   // Desktop Sidebar
   const DesktopSidebar = () => (
@@ -133,7 +152,7 @@ const Sidebar = ({ activeSection }) => {
         </button>
       </div>
     </div>
-  )
+  );
 
   // Mobile Sidebar
   const MobileSidebar = () => (
@@ -163,8 +182,8 @@ const Sidebar = ({ activeSection }) => {
             <div className="p-3 border-t border-gray-700">
               <button
                 onClick={() => {
-                  onLogout()
-                  setIsMobileMenuOpen(false)
+                  onLogout();
+                  setIsMobileMenuOpen(false);
                 }}
                 className="w-full flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
               >
@@ -176,15 +195,14 @@ const Sidebar = ({ activeSection }) => {
         </SheetContent>
       </Sheet>
     </div>
-  )
+  );
 
   return (
     <>
       <DesktopSidebar />
       <MobileSidebar />
     </>
-  )
-}
+  );
+};
 
-export default Sidebar
-
+export default Sidebar;

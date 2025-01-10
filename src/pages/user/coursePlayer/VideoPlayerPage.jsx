@@ -95,10 +95,9 @@ export default function CoursePlayer() {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const response = await axiosInstance.get(
-          "http://localhost:3000/course/play-course",
-          { params: { userId: user._id, courseId } }
-        );
+        const response = await axiosInstance.get("/course/play-course", {
+          params: { userId: user._id, courseId },
+        });
 
         console.log("response", response.data);
 
@@ -127,12 +126,9 @@ export default function CoursePlayer() {
 
     const fetchRating = async () => {
       try {
-        const response = await axiosInstance.get(
-          "http://localhost:3000/course/ratings",
-          {
-            params: { userId: user._id, courseId },
-          }
-        );
+        const response = await axiosInstance.get("/course/ratings", {
+          params: { userId: user._id, courseId },
+        });
 
         setAlreadyRated(response.data?.hasRated || false);
       } catch (error) {
@@ -191,7 +187,7 @@ export default function CoursePlayer() {
     try {
       setCertificateLoading(true);
       const response = await axiosInstance.post(
-        "http://localhost:3000/course/certificate/generate",
+        "/course/certificate/generate",
         {
           userId: user._id,
           courseId: courseId,
@@ -213,14 +209,11 @@ export default function CoursePlayer() {
 
   const sendProgressToBackend = async (lessonId) => {
     try {
-      await axiosInstance.put(
-        "http://localhost:3000/course/course-progress",
-        {
-          userId: user._id,
-          courseId,
-          lessonId,
-        }
-      );
+      await axiosInstance.put("/course/course-progress", {
+        userId: user._id,
+        courseId,
+        lessonId,
+      });
     } catch (error) {
       console.error("Error updating lesson progress", error);
     }
@@ -303,15 +296,12 @@ export default function CoursePlayer() {
 
   const submitCourseReview = async () => {
     try {
-      const response = await axiosInstance.post(
-        "http://localhost:3000/course/ratings",
-        {
-          courseId: courseId,
-          userId: user._id,
-          rating: courseRating,
-          feedback,
-        }
-      );
+      const response = await axiosInstance.post("/course/ratings", {
+        courseId: courseId,
+        userId: user._id,
+        rating: courseRating,
+        feedback,
+      });
 
       if (response.status === 200) {
         setRatingModalOpen(false);

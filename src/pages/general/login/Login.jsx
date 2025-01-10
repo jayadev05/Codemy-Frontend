@@ -16,7 +16,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -26,21 +25,24 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await axios.post("http://localhost:3000/user/login", {
+      const response = await axios.post("/user/login", {
         email,
         password,
       });
 
       if (response.status === 200) {
-        const { userData, userType, accessToken,refreshToken, redirectUrl } = response.data;
+        const { userData, userType, accessToken, refreshToken, redirectUrl } =
+          response.data;
 
         // Check if the user is active before proceeding
         if (userData.isActive === false) {
-          toast.error("Your account is blocked. Please contact support.",{style: {
-            borderRadius: '10px',
-            background: '#111826',
-            color: '#fff',
-          }});
+          toast.error("Your account is blocked. Please contact support.", {
+            style: {
+              borderRadius: "10px",
+              background: "#111826",
+              color: "#fff",
+            },
+          });
           setIsLoading(false);
           return;
         }
@@ -64,26 +66,30 @@ const Login = () => {
             console.warn("Unknown user type:", userType);
         }
 
-        localStorage.setItem('accessToken',accessToken);
-        localStorage.setItem('refreshToken',refreshToken);
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
 
-        toast.success("Log In Successfull!",{style: {
-          borderRadius: '10px',
-          background: '#111826',
-          color: '#fff',
-        }});
-    
-          navigate(redirectUrl || "/");
-       
+        toast.success("Log In Successfull!", {
+          style: {
+            borderRadius: "10px",
+            background: "#111826",
+            color: "#fff",
+          },
+        });
+
+        navigate(redirectUrl || "/");
       }
     } catch (error) {
       console.error("Login error:", error);
       toast.error(
-        error.response?.data?.message || "Login failed. Please try again.",{style: {
-          borderRadius: '10px',
-          background: '#111826',
-          color: '#fff',
-        }}
+        error.response?.data?.message || "Login failed. Please try again.",
+        {
+          style: {
+            borderRadius: "10px",
+            background: "#111826",
+            color: "#fff",
+          },
+        }
       );
     } finally {
       setIsLoading(false);
@@ -95,69 +101,64 @@ const Login = () => {
       setIsLoading(true);
 
       if (authResult.code) {
-        const response = await axiosInstance.post("http://localhost:3000/user/login/google", {
+        const response = await axiosInstance.post("/user/login/google", {
           code: authResult.code,
         });
 
-       
-      
-        if(response.data.data.CurrentUser?.isActive===false){
+        if (response.data.data.CurrentUser?.isActive === false) {
           setIsLoading(false);
-          toast.error("Your account is blocked. Please contact support",{style: {
-            borderRadius: '10px',
-            background: '#111826',
-            color: '#fff',
-          }});
-          return
+          toast.error("Your account is blocked. Please contact support", {
+            style: {
+              borderRadius: "10px",
+              background: "#111826",
+              color: "#fff",
+            },
+          });
+          return;
         }
 
         if (response.data.success) {
+          const accessToken = response.data.data.accessToken;
+          const refreshToken = response.data.data.refreshToken;
 
-        
+          localStorage.setItem("accessToken", accessToken);
+          localStorage.setItem("refreshToken", refreshToken);
 
-          const accessToken=response.data.data.accessToken;
-          const refreshToken=response.data.data.refreshToken;
+          toast.success("Google Sign-in Successful!", {
+            style: {
+              borderRadius: "10px",
+              background: "#111826",
+              color: "#fff",
+            },
+          });
 
-          localStorage.setItem('accessToken',accessToken);
-          localStorage.setItem('refreshToken',refreshToken);
-          
-          
-       
-          toast.success("Google Sign-in Successful!",{style: {
-            borderRadius: '10px',
-            background: '#111826',
-            color: '#fff',
-          }});
-
-          
           const accType = response.data.data.accType;
-          
 
           if (accType === "admin") {
-              
             dispatch(addAdmin(response.data.data.currentUser));
-            navigate("/admin/dashboard"); 
+            navigate("/admin/dashboard");
             // Redirect to admin dashboard
-          } else if(accType==="tutor") {
+          } else if (accType === "tutor") {
             dispatch(addTutor(response.data.data.currentUser));
             navigate("/tutor/dashboard"); // Redirect to user/tutor home
-          }
-          else {
+          } else {
             dispatch(addUser(response.data.data.currentUser));
-            navigate("/")
+            navigate("/");
           }
-
         }
       }
     } catch (error) {
       console.error("Error during Google sign-in:", error);
       toast.error(
         error.response?.data?.message ||
-          "Google sign-in failed. Please try again.",{style: {
-            borderRadius: '10px',
-            background: '#111826',
-            color: '#fff',
-          }}
+          "Google sign-in failed. Please try again.",
+        {
+          style: {
+            borderRadius: "10px",
+            background: "#111826",
+            color: "#fff",
+          },
+        }
       );
     } finally {
       setIsLoading(false);
@@ -176,14 +177,15 @@ const Login = () => {
 
   return (
     <>
-     
       <header className="flex justify-around items-center pb-4 dark:bg-slate-800">
         <div className="text-3xl font-bold text-gray-700 flex items-center">
           <img src={logo} alt="Logo" className="h-8 w-8 mr-2 mt-2 " />
           <h2 className="dark:text-white text-[1.5rem]">Codemy</h2>
         </div>
         <div>
-          <span className="text-gray-500 dark:text-white mr-2">Don't have an account?</span>
+          <span className="text-gray-500 dark:text-white mr-2">
+            Don't have an account?
+          </span>
           <button
             onClick={() => navigate("/signup")}
             className="text-orange-500 font-semibold hover:underline"
@@ -208,7 +210,9 @@ const Login = () => {
 
             <form onSubmit={handleLogin} className="space-y-5">
               <div>
-                <label className="block text-gray-600 dark:text-white mb-2">Email</label>
+                <label className="block text-gray-600 dark:text-white mb-2">
+                  Email
+                </label>
                 <input
                   onChange={(e) => setEmail(e.target.value)}
                   type="email"
@@ -218,7 +222,9 @@ const Login = () => {
               </div>
 
               <div>
-                <label className="block text-gray-600 dark:text-white mb-2">Password</label>
+                <label className="block text-gray-600 dark:text-white mb-2">
+                  Password
+                </label>
                 <div className="relative">
                   <input
                     onChange={(e) => setPassword(e.target.value)}
@@ -247,7 +253,10 @@ const Login = () => {
 
               <div className="flex items-center">
                 <input type="checkbox" id="remember" className="mr-2" />
-                <label htmlFor="remember" className="text-gray-600 dark:text-white">
+                <label
+                  htmlFor="remember"
+                  className="text-gray-600 dark:text-white"
+                >
                   Remember me
                 </label>
               </div>
@@ -261,7 +270,9 @@ const Login = () => {
               </button>
             </form>
 
-            <div className="mt-3 text-center text-gray-500 dark:text-white">or</div>
+            <div className="mt-3 text-center text-gray-500 dark:text-white">
+              or
+            </div>
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-300" />

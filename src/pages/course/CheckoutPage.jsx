@@ -105,17 +105,14 @@ export default function CheckoutPage() {
 
   const handleLocalPayment = async () => {
     try {
-      const response = await axiosInstance.post(
-        "http://localhost:3000/checkout/orders",
-        {
-          amount: total,
-          userId: user._id,
-          courses,
-          paymentMethod,
-          couponCode: appliedCoupon?.code,
-          discountAmount
-        }
-      );
+      const response = await axiosInstance.post("/checkout/orders", {
+        amount: total,
+        userId: user._id,
+        courses,
+        paymentMethod,
+        couponCode: appliedCoupon?.code,
+        discountAmount,
+      });
 
       const { id: razorpayOrderId, amount, currency } = response.data.order;
 
@@ -160,15 +157,12 @@ export default function CheckoutPage() {
 
   const handleGlobalPayment = async () => {
     try {
-      const response = await axiosInstance.post(
-        "http://localhost:3000/checkout/orders",
-        {
-          amount: total,
-          userId: user._id,
-          courses,
-          paymentMethod,
-        }
-      );
+      const response = await axiosInstance.post("/checkout/orders", {
+        amount: total,
+        userId: user._id,
+        courses,
+        paymentMethod,
+      });
 
       const { clientSecret, orderId } = response.data;
 
@@ -194,13 +188,10 @@ export default function CheckoutPage() {
       }
 
       if (paymentIntent.status === "succeeded") {
-        await axiosInstance.post(
-          "http://localhost:3000/checkout/payment/verify",
-          {
-            paymentIntentId: paymentIntent.id,
-            orderId,
-          }
-        );
+        await axiosInstance.post("/checkout/payment/verify", {
+          paymentIntentId: paymentIntent.id,
+          orderId,
+        });
 
         toast.success("Payment successful! 🎉");
         navigate(`/user/payment-success/${orderId}`);
@@ -216,15 +207,12 @@ export default function CheckoutPage() {
       const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
         paymentResponse;
 
-      const response = await axiosInstance.post(
-        "http://localhost:3000/checkout/payment/verify",
-        {
-          razorpay_order_id,
-          razorpay_payment_id,
-          razorpay_signature,
-          userId: user._id,
-        }
-      );
+      const response = await axiosInstance.post("/checkout/payment/verify", {
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature,
+        userId: user._id,
+      });
 
       if (response.status === 200) {
         const orderId = response.data.orderId;

@@ -252,14 +252,11 @@ const SettingsForm = () => {
         profileImg: profileImg,
       };
 
-      const existCheck = await axiosInstance.post(
-        "http://localhost:3000/admin/auth/check-mail",
-        {
-          phone: payload.phone,
-          username: payload.userName,
-          userId: user._id,
-        }
-      );
+      const existCheck = await axiosInstance.post("/admin/auth/check-mail", {
+        phone: payload.phone,
+        username: payload.userName,
+        userId: user._id,
+      });
 
       const { phoneExists, userNameExists } = existCheck.data;
 
@@ -311,10 +308,7 @@ const SettingsForm = () => {
         return;
       }
 
-      const response = await axiosInstance.put(
-        "http://localhost:3000/user/profile",
-        payload
-      );
+      const response = await axiosInstance.put("/user/profile", payload);
 
       if (response.status === 200) {
         const updatedUser = response.data.updatedUser;
@@ -351,10 +345,7 @@ const SettingsForm = () => {
         newPassword: formData.newPassword,
       };
       axios.defaults.withCredentials = true;
-      const response = await axiosInstance.put(
-        "http://localhost:3000/user/password",
-        payload
-      );
+      const response = await axiosInstance.put("/user/password", payload);
 
       toast.success("Password changed successfully!");
       setFormData((prev) => ({

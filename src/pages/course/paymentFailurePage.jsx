@@ -14,13 +14,13 @@ const PaymentFailed = () => {
   const dispatch = useDispatch();
 
   const [order, setOrder] = useState({});
-  console.log("order in payment failure page",order)
+  console.log("order in payment failure page", order);
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
         const response = await axiosInstance.get(
-          `http://localhost:3000/checkout/order/${orderId}/details`
+          `/checkout/order/${orderId}/details`
         );
 
         setOrder(response.data.order);
@@ -82,10 +82,11 @@ const PaymentFailed = () => {
       const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
         paymentResponse;
 
-      const response = await axiosInstance.post(
-        "http://localhost:3000/checkout/payment/verify",
-        { razorpay_order_id, razorpay_payment_id, razorpay_signature }
-      );
+      const response = await axiosInstance.post("/checkout/payment/verify", {
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature,
+      });
 
       if (response.status === 200) {
         console.log(response, "asdasd");

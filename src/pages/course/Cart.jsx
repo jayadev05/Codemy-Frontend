@@ -27,12 +27,9 @@ export default function ShoppingCart() {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const response = await axiosInstance.get(
-          "http://localhost:3000/user/cart",
-          {
-            params: { userId: user._id },
-          }
-        );
+        const response = await axiosInstance.get("/user/cart", {
+          params: { userId: user._id },
+        });
         dispatch(setCart(response.data.cart));
       } catch (error) {
         console.log("Failed to fetch cart", error);
@@ -45,7 +42,7 @@ export default function ShoppingCart() {
 
   const handleRemoveFromCart = async (courseId) => {
     try {
-      await axiosInstance.delete("http://localhost:3000/user/cart/remove", {
+      await axiosInstance.delete("/user/cart/remove", {
         params: { userId: user._id, courseId },
       });
 
