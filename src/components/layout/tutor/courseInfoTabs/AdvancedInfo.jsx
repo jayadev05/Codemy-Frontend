@@ -4,7 +4,7 @@ import { X } from 'lucide-react';
 import useCurrencyFormat from '../../../../hooks/UseCurrencyFormat';
 import toast from 'react-hot-toast';
 
-function AdvancedInfo({initialData ,sendData}) {
+function AdvancedInfo({initialData ,sendData,errors}) {
 
   const [description, setDescription] = useState(initialData?.description || "");
   const [thumbnail, setThumbnail] = useState(initialData?.thumbnail || null);
@@ -261,6 +261,7 @@ function AdvancedInfo({initialData ,sendData}) {
           <div className="text-right text-sm text-gray-500">
             {description.length}/500
           </div>
+          {errors?.advanceInfo?.description && <span className="text-red-500 text-sm">{errors?.advanceInfo?.description}</span>}
         </div>
 
         <div>
@@ -271,6 +272,7 @@ function AdvancedInfo({initialData ,sendData}) {
             onChange={(e) => setCourseContent(e.target.value)}
             className="w-full min-h-[150px] p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
+          {errors?.advanceInfo?.courseContent && <span className="text-red-500 text-sm">{errors?.advanceInfo?.courseContent}</span>}
         </div>
 
         <div className="md:col-span-2">

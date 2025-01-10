@@ -24,8 +24,8 @@ function AdminHeader({heading,subheading}) {
 
   return (
     
-          <header className="flex items-center justify-between border-b bg-white px-6 py-4 ">
-                     <div>
+          <header className="flex items-center  justify-between border-b bg-white px-6 py-4 ">
+                     <div className='ml-10 lg:ml-0 '>
                        <h1 className="text-3xl font-bold">{heading}</h1>
                        <p className="mt-1 text-sm text-gray-500">
               {subheading}

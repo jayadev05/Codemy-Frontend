@@ -33,6 +33,7 @@ export default function AddCourse() {
   const dispatch = useDispatch();
   const navigate=useNavigate()
 
+  const [errors,setErrors]=useState({})
  
 
   const [courseData, setCourseData] = useState({
@@ -68,9 +69,9 @@ export default function AddCourse() {
   ];
 
 
-  useEffect(() => {
-    dispatch(addCourse(courseData));
-  }, [courseData, dispatch]);
+  // useEffect(() => {
+  //   dispatch(addCourse(courseData));
+  // }, [courseData, dispatch]);
 
 
   const updateCourseData = (section, newData) => {
@@ -130,14 +131,59 @@ const handleCurriculumData = useCallback((dataFromChild) => {
 
 
   const validateBasicInfo = () => {
-    const { title, category, topic, language, difficulty, duration } = courseData.basicInfo;
-    return !!(title && category && topic && language && difficulty && duration);
+    const { title, category, topic, language, difficulty, duration } = courseData.basicInfo;;
+    const newErrors = {};
+  
+    if (!title || title.trim().length < 8) {
+      newErrors.title = "Title must be at least 8 characters long.";
+    }
+  
+    if (!category) {
+      newErrors.category = "Category is required.";
+    }
+  
+    if (!topic || topic.trim().length < 8) {
+      newErrors.topic = "Topic must be at least 8 characters long.";
+    }
+  
+    if (!language) {
+      newErrors.language = "Language is required.";
+    }
+  
+    if (!difficulty) {
+      newErrors.difficulty = "Difficulty level is required.";
+    }
+  
+    if (!duration) {
+      newErrors.duration = "Duration is required.";
+    }
+  
+    return newErrors; // Return errors instead of setting state directly
   };
   
   const validateAdvanceInfo = () => {
-    const { price, description, thumbnail, courseContent } = courseData.advanceInfo;
-    return !!(price && description && thumbnail && courseContent);
+    const { price, description, thumbnail, courseContent } = courseData.advanceInfo;;
+    const newErrors = {};
+  
+    if (!price) {
+      newErrors.price = "Price is required.";
+    }
+  
+    if (!description || description.trim().length < 8) {
+      newErrors.description = "Description must be at least 8 characters long.";
+    }
+  
+    if (!thumbnail) {
+      newErrors.thumbnail = "Thumbnail is required.";
+    }
+  
+    if (!courseContent || courseContent.trim().length < 10) {
+      newErrors.courseContent = "Course content must be at least 10 characters long.";
+    }
+  
+    return newErrors; // Return errors instead of setting state directly
   };
+  
   
   const validateCurriculum = () => {
     const curriculumArray = Array.isArray(courseData.curriculum)
@@ -168,24 +214,29 @@ const handleCurriculumData = useCallback((dataFromChild) => {
   
     return isValid;
   };
+  
   const isCurrentTabComplete = () => {
     switch (activeTab) {
-      case 0: 
-        console.log('Basic Info:', courseData.basicInfo);
-        return validateBasicInfo();
-      case 1: 
-        console.log('Advance Info:', courseData.advanceInfo);
-        return validateAdvanceInfo();
-      case 2: 
-        console.log('Curriculum:', courseData.curriculum);
-        return validateCurriculum();
-      default: 
+      case 0: {
+        const basicInfoErrors = validateBasicInfo();
+        
+        return Object.keys(basicInfoErrors).length === 0;
+      }
+      case 1: {
+        const advanceInfoErrors = validateAdvanceInfo();
+        return Object.keys(advanceInfoErrors).length === 0;
+      }
+      case 2: {
+        const curriculumErrors = validateCurriculum();
+        return Object.keys(curriculumErrors).length === 0;
+      }
+      default:
         return true;
     }
   };
-
+  
   const calculateProgressTab1 = () => {
- 
+   
     const fields = [
       courseData.basicInfo?.title, 
       courseData.basicInfo?.category, 
@@ -200,7 +251,7 @@ const handleCurriculumData = useCallback((dataFromChild) => {
       field !== '' && 
       field !== 'default'
     ).length;
- 
+  
     return filledFields;
   };
   
@@ -220,25 +271,24 @@ const handleCurriculumData = useCallback((dataFromChild) => {
     ).length;
     return filledFields;
   };
-
+  
   const handleSaveAndNext = (e) => {
-
     e.preventDefault();
+  
+    if(!validateBasicInfo || !validateAdvanceInfo) return
+  
 
     if (isCurrentTabComplete()) {
-
-      if(activeTab===2){
+      if (activeTab === 2) {
         dispatch(addCourse(payload));
       }
-
+  
       if (activeTab < tabs.length - 1) {
         setActiveTab(activeTab + 1);
-
       } else {
         // This is now the final submission
         handleFinalSubmit();
       }
-
     } else {
       toast("Please fill all fields before proceeding.", {
         icon: "✍️",
@@ -250,36 +300,38 @@ const handleCurriculumData = useCallback((dataFromChild) => {
       });
     }
   };
-
+  
   const handleFinalSubmit = async () => {
-   
-
     try {
       const response = await axiosInstance.post(
         "http://localhost:3000/course/courses",
         payload
       );
-      toast.success("Course created successfully!",{style: {
-        borderRadius: '10px',
-        background: '#111826',
-        color: '#fff',
-      }});
-
-      dispatch(clearCourse(existingCourse));
-
-      navigate('/tutor/myCourses');
-
-    } catch (error) {
-      console.error(error);
-      if (error.response) {
-        toast.error(error.response.data.message || "Failed to create course",{style: {
+      toast.success("Course created successfully!", {
+        style: {
           borderRadius: '10px',
           background: '#111826',
           color: '#fff',
-        }});
+        },
+      });
+  
+      dispatch(clearCourse(existingCourse));
+      navigate('/tutor/myCourses');
+  
+    } catch (error) {
+      console.error(error);
+      if (error.response) {
+        toast.error(error.response.data.message || "Failed to create course", {
+          style: {
+            borderRadius: '10px',
+            background: '#111826',
+            color: '#fff',
+          },
+        });
       }
     }
   };
+  
 
   return (
     <>
@@ -338,6 +390,7 @@ const handleCurriculumData = useCallback((dataFromChild) => {
                 {activeTab === 0 && (
                   <BasicInfo
                   initialData={courseData.basicInfo}
+                  errors={errors}
                     sendData={handleBasicInfoData}
                   />
                 )}
@@ -345,6 +398,7 @@ const handleCurriculumData = useCallback((dataFromChild) => {
                 {activeTab === 1 && (
                   <AdvancedInfo 
                   initialData={courseData.advanceInfo}
+                  errors={errors}
                   sendData={handleAdvanceInfoData} />
                 )}
 

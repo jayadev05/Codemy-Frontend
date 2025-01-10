@@ -4,7 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import axiosInstance from "@/config/axiosConfig";
 
-function BasicInfo({ initialData, sendData }) {
+function BasicInfo({ initialData, sendData,errors }) {
   // Use initialData to set initial state values
   const [title, setTitle] = useState(initialData?.title || "");
   const [topic, setTopic] = useState(initialData?.topic || "");
@@ -68,6 +68,7 @@ function BasicInfo({ initialData, sendData }) {
     }
   };
 
+
   // Handlers for select changes
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
@@ -98,6 +99,7 @@ function BasicInfo({ initialData, sendData }) {
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">
             {title.length}/50
           </span>
+          {errors?.basicInfo?.title && <span className="text-red-500 text-sm">{errors?.basicInfo?.title}</span>}
         </div>
       </div>
 
@@ -121,7 +123,7 @@ function BasicInfo({ initialData, sendData }) {
         </div>
       </div>
 
-      {/* Rest of the component remains the same */}
+      
       <div>
         <label className="block mb-2 font-medium">Course Topic</label>
         <div className="relative">
@@ -137,6 +139,7 @@ function BasicInfo({ initialData, sendData }) {
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">
             {topic.length}/100
           </span>
+          {errors?.basicInfo?.topic && <span className="text-red-500 text-sm">{errors?.basicInfo?.topic}</span>}
         </div>
       </div>
 

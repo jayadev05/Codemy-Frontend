@@ -58,8 +58,13 @@ export default function CourseListing() {
 
   const handleCourseView = (courseId) => {
     try {
-      dispatch(setCurrentCourse(courseId));
-      navigate(`/course/details`);
+      if (user?.activeCourses.includes(courseId)) {
+        dispatch(setCurrentCourse(courseId));
+        navigate(`/user/play-course`);
+      } else {
+        dispatch(setCurrentCourse(courseId));
+        navigate(`/course/details`);
+      }
     } catch (error) {
       console.log(error);
       toast.error(error.message || "Failed to view course");
@@ -111,7 +116,7 @@ export default function CourseListing() {
   const fetchCourses = async () => {
     try {
       const response = await axiosInstance.get(
-        "http://localhost:3000/course/courses/basic-info",
+        "/course/courses/basic-info",
         {
           params: {
             search: searchQuery,
@@ -157,8 +162,6 @@ export default function CourseListing() {
       [filterName]: value,
     }));
   };
-
- 
 
   const FilterSection = () => (
     <div
@@ -307,8 +310,11 @@ export default function CourseListing() {
         dispatch(addToWishlist(response.data.wishlist));
 
         fetchWishlist();
-      } else  {
-        toast.error(response.data.message,{icon:'⚠️',style: { borderRadius: "10px", background: "#eb5a0c", color: "#fff" }});
+      } else {
+        toast.error(response.data.message, {
+          icon: "⚠️",
+          style: { borderRadius: "10px", background: "#eb5a0c", color: "#fff" },
+        });
       }
     } catch (error) {
       console.error(error);
@@ -427,15 +433,17 @@ export default function CourseListing() {
                     alt={`${course.title} thumbnail`}
                     className="h-full w-full object-cover cursor-pointer"
                   />
-                  {user && (
-                    <button
-                      onClick={() => handleWishlist(course._id)}
-                      className="absolute top-2 right-2 p-2 bg-white bg-opacity-70 rounded-full hover:bg-opacity-100 transition-all duration-300"
-                      aria-label="Add to wishlist"
-                    >
-                      <Heart className="w-5 h-5 text-gray-600 hover:text-red-500 transition-colors duration-300" />
-                    </button>
-                  )}
+
+                  {user &&
+                    (user?.activeCourses?.includes(course._id) ? null : (
+                      <button
+                        onClick={() => handleWishlist(course._id)}
+                        className="absolute top-2 right-2 p-2 bg-white bg-opacity-70 rounded-full hover:bg-opacity-100 transition-all duration-300"
+                        aria-label="Add to wishlist"
+                      >
+                        <Heart className="w-5 h-5 text-gray-600 hover:text-red-500 transition-colors duration-300" />
+                      </button>
+                    ))}
                 </div>
                 <div className="flex flex-col flex-grow p-4">
                   <span className="inline-block self-start rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-orange-800">
@@ -471,13 +479,17 @@ export default function CourseListing() {
                     <span className="text-xl font-bold text-gray-900 dark:text-white">
                       ₹{formatCurrency(course.price.$numberDecimal)}
                     </span>
-                    <button
-                      className="z-10"
-                      onClick={() => handleAddToCart(course._id, course.price)}
-                      title="add to cart"
-                    >
-                      <ShoppingBag />
-                    </button>
+                    {user?.activeCourses?.includes(course._id) ? null : (
+                      <button
+                        className="z-10"
+                        onClick={() =>
+                          handleAddToCart(course._id, course.price)
+                        }
+                        title="add to cart"
+                      >
+                        <ShoppingBag />
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

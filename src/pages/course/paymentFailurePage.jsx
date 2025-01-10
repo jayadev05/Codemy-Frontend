@@ -14,6 +14,7 @@ const PaymentFailed = () => {
   const dispatch = useDispatch();
 
   const [order, setOrder] = useState({});
+  console.log("order in payment failure page",order)
 
   useEffect(() => {
     const fetchOrderDetails = async () => {

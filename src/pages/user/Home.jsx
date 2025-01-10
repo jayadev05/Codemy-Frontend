@@ -141,14 +141,24 @@ export default function Home() {
   };
 
   const handleCourseView = (courseId) => {
-    try {
-      dispatch(setCurrentCourse(courseId));
-      navigate(`/course/details`);
-    } catch (error) {
-      console.log(error);
-      toast.error(error.message || "Failed to view course");
-    }
-  };
+     try {
+ 
+       if(user?.activeCourses.includes(courseId)){
+        dispatch(setCurrentCourse(courseId));
+            navigate(`/user/play-course`);
+       }
+ 
+       else{
+ 
+         dispatch(setCurrentCourse(courseId));
+         navigate(`/course/details`);
+       }
+ 
+     } catch (error) {
+       console.log(error);
+       toast.error(error.message || "Failed to view course");
+     }
+   };
 
   const handleWishlist = async (id) => {
     try {
@@ -269,6 +279,7 @@ export default function Home() {
                         className="h-full w-full object-cover cursor-pointer"
                       />
                       {user && (
+                        user?.activeCourses.includes(course._id)?null :
                         <button
                           onClick={() => handleWishlist(course._id)}
                           className="absolute top-2 right-2 p-2 bg-white bg-opacity-70 rounded-full hover:bg-opacity-100 transition-all duration-300"
@@ -317,6 +328,8 @@ export default function Home() {
                         <span className="text-xl font-bold text-gray-900 dark:text-white">
                           ₹{formatCurrency(course.price.$numberDecimal)}
                         </span>
+                        {user && (
+                        user?.activeCourses.includes(course._id)?null :
                         <button
                           onClick={() =>
                             handleAddToCart(course._id, course.price)
@@ -325,6 +338,7 @@ export default function Home() {
                         >
                           <ShoppingBag />
                         </button>
+                        )}
                       </div>
                     </div>
                   </div>

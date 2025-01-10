@@ -39,11 +39,17 @@ const BillingPage = () => {
     { name: "Jun", revenue: 2390 },
   ];
 
+  
+
   const [orders, setOrders] = useState([]);
+
+  console.log(orders)
 
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
   const dataPerPage = 3;
   const [currentPage, setCurrentPage] = useState(1);
+
+
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -93,30 +99,23 @@ const BillingPage = () => {
     }
   };
 
-  const calculateCourseDistribution = (orders) => {
-    const revenuePerCategory = {};
-
-    // Calculate revenue per category
-    orders.forEach((order) => {
-      order.courses.forEach((course) => {
-        const categoryTitle = course.categoryId?.title;
-
-        if (categoryTitle) {
-          revenuePerCategory[categoryTitle] = parseInt(
-            (revenuePerCategory[categoryTitle] || 0) +
-              (course.price?.$numberDecimal || 0)
-          );
-        }
+  const calculateCourseDistribution = (orders = []) => {
+    const revenuePerCategory = orders.reduce((acc, order) => {
+      order.courses?.forEach((course) => {
+        const categoryTitle = course.categoryId?.title || "Unknown Category";
+        const courseRevenue = parseFloat(course.price?.$numberDecimal || 0);
+  
+        acc[categoryTitle] = (acc[categoryTitle] || 0) + courseRevenue;
       });
-    });
-
-    // Transform to the required format
-    const courseDistribution = Object.entries(revenuePerCategory).map(
-      ([name, value]) => ({ name, value })
-    );
-
-    return courseDistribution;
+      return acc;
+    }, {});
+  
+    return Object.entries(revenuePerCategory).map(([name, value]) => ({
+      name,
+      value,
+    }));
   };
+  
 
   const courseDistribution = calculateCourseDistribution(orders);
 
@@ -284,28 +283,28 @@ const BillingPage = () => {
                   Course Sales Distribution
                 </h3>
                 <div className="h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={courseDistribution}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="value"
-                      >
-                        {courseDistribution.map((entry, index) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={COLORS[index % COLORS.length]}
-                          />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
+                <ResponsiveContainer width="100%" height={400}>
+      <PieChart>
+        <Pie
+          data={courseDistribution}
+          cx="50%"
+          cy="50%"
+          labelLine={false}
+          outerRadius={100}
+          fill="#8884d8"
+          dataKey="value"
+        >
+          {courseDistribution.map((entry, index) => (
+            <Cell
+              key={`cell-${index}`}
+              fill={COLORS[index % COLORS.length]}
+            />
+          ))}
+        </Pie>
+        <Tooltip />
+        <Legend />
+      </PieChart>
+    </ResponsiveContainer>
                 </div>
               </div>
             </div>
@@ -371,7 +370,7 @@ const BillingPage = () => {
                             {order.orderId}
                           </div>
                           <div className="text-sm text-gray-500">
-                            {order.courses.join(", ")}
+                            {order.courses.map((course)=>course.categoryId.title).join(", ")}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -380,7 +379,7 @@ const BillingPage = () => {
                           </div>
                           {order.discount?.discountAmount > 0 && (
                             <div className="text-xs text-gray-500">
-                              Discount: ${order.discount?.discountAmount}
+                              Discount: ₹{order.discount?.discountAmount}
                             </div>
                           )}
                         </td>

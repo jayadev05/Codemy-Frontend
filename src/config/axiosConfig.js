@@ -1,35 +1,30 @@
-import axios from 'axios';
-import {store} from '../store/store'
-import { logoutUser } from '@/store/slices/userSlice';
+import axios from "axios";
+import { store } from "../store/store";
+import { logoutUser } from "@/store/slices/userSlice";
 
 // Create an Axios instance
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000',
-  withCredentials: true
+  baseURL: "https://backend.codemy.jayadevnair.in",
+  withCredentials: true,
 });
-
 
 // Add a request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
-   
-    const accessToken = localStorage.getItem('accessToken');
-    const refreshToken = localStorage.getItem('refreshToken');
+    const accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
 
-  
     if (accessToken) {
-     
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
 
     if (refreshToken) {
-      config.headers['x-refresh-token'] = refreshToken;
+      config.headers["x-refresh-token"] = refreshToken;
     }
 
     return config;
   },
   (error) => {
-   
     return Promise.reject(error);
   }
 );
@@ -38,17 +33,14 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-
     if (error.response && error.response.status === 403) {
-      
-      console.error('Unauthorized! Redirecting to login...');
+      console.error("Unauthorized! Redirecting to login...");
 
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       store.dispatch(clearUser(user));
-    
 
-      window.location.href = '/login';
+      window.location.href = "/login";
     }
     return Promise.reject(error);
   }

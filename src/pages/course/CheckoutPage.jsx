@@ -113,6 +113,7 @@ export default function CheckoutPage() {
           courses,
           paymentMethod,
           couponCode: appliedCoupon?.code,
+          discountAmount
         }
       );
 
