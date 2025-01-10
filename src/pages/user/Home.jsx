@@ -268,20 +268,20 @@ export default function Home() {
               <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mx-auto max-w-9xl px-2 sm:px-6 lg:px-3">
                 {courses.length>0 && courses.map((course) => (
                   <div
-                    key={course._id}
+                    key={course?._id}
                     className="flex flex-col overflow-hidden rounded-lg bg-white dark:bg-slate-900 dark:border border-gray-600 shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out"
                   >
                     <div className="relative aspect-[3/2] max-h-[200px] w-full">
                       <img
-                        onClick={() => handleCourseView(course._id)}
-                        src={course.thumbnail}
-                        alt={`${course.title} thumbnail`}
+                        onClick={() => handleCourseView(course?._id)}
+                        src={course?.thumbnail}
+                        alt={`${course?.title} thumbnail`}
                         className="h-full w-full object-cover cursor-pointer"
                       />
                       {user && (
-                        user?.activeCourses.includes(course._id)?null :
+                        user?.activeCourses.includes(course?._id)?null :
                         <button
-                          onClick={() => handleWishlist(course._id)}
+                          onClick={() => handleWishlist(course?._id)}
                           className="absolute top-2 right-2 p-2 bg-white bg-opacity-70 rounded-full hover:bg-opacity-100 transition-all duration-300"
                           aria-label="Add to wishlist"
                         >
@@ -291,13 +291,13 @@ export default function Home() {
                     </div>
                     <div className="flex flex-col flex-grow p-4">
                       <span className="inline-block self-start rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-orange-800">
-                        {course.categoryId.title}
+                        {course?.categoryId?.title}
                       </span>
                       <h3
                         onClick={() => handleCourseView(course._id)}
                         className="mt-2 text-lg font-semibold line-clamp-2 text-gray-900 dark:text-white flex-grow cursor-pointer"
                       >
-                        {course.title}
+                        {course?.title}
                       </h3>
 
                       <div className="mt-3 flex items-center gap-2">
@@ -306,7 +306,7 @@ export default function Home() {
                             <svg
                               key={i}
                               className={`w-4 h-4 ${
-                                i < Math.floor(course.averageRating)
+                                i < Math.floor(course?.averageRating)
                                   ? "text-orange-400"
                                   : "text-gray-300"
                               }`}
@@ -318,21 +318,21 @@ export default function Home() {
                           ))}
                         </div>
                         <span className="text-sm font-medium text-gray-900 dark:text-white">
-                          {course.averageRating.toFixed(1)}
+                          {course?.averageRating?.toFixed(1)}
                         </span>
                         <span className="text-sm text-gray-500">
-                          ({course.enrolleeCount.toLocaleString()} students)
+                          ({course?.enrolleeCount?.toLocaleString()} students)
                         </span>
                       </div>
                       <div className="mt-3 flex items-center justify-between">
                         <span className="text-xl font-bold text-gray-900 dark:text-white">
-                          ₹{formatCurrency(course.price.$numberDecimal)}
+                          ₹{formatCurrency(course?.price.$numberDecimal)}
                         </span>
                         {user && (
                         user?.activeCourses.includes(course._id)?null :
                         <button
                           onClick={() =>
-                            handleAddToCart(course._id, course.price)
+                            handleAddToCart(course._id, course?.price)
                           }
                           title="add to cart"
                         >
