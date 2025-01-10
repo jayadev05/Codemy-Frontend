@@ -266,7 +266,7 @@ export default function Home() {
               </h2>
 
               <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mx-auto max-w-9xl px-2 sm:px-6 lg:px-3">
-                {courses.map((course) => (
+                {courses.length>0 && courses.map((course) => (
                   <div
                     key={course._id}
                     className="flex flex-col overflow-hidden rounded-lg bg-white dark:bg-slate-900 dark:border border-gray-600 shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out"
