@@ -114,7 +114,7 @@ export default function Signup() {
     try {
       setIsLoading(true);
 
-      const response = await axios.post("/user/otp/send", {
+      const response = await axiosInstance.post("/user/otp/send", {
         email: formData.email,
       });
 
@@ -150,7 +150,7 @@ export default function Signup() {
     try {
       setIsLoading(true);
       // First, check if email already exists
-      const checkEmailResponse = await axios.post("/admin/auth/check-mail", {
+      const checkEmailResponse = await axiosInstance.post("/admin/auth/check-mail", {
         email: formData.email,
         username: formData.username,
       });
@@ -179,7 +179,7 @@ export default function Signup() {
       setIsLoading(true);
 
       if (authResult.code) {
-        const response = await axios.post("/user/login/google", {
+        const response = await axiosInstance.post("/user/login/google", {
           code: authResult.code,
         });
 
