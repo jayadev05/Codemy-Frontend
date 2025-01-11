@@ -31,7 +31,7 @@ class SocketService {
       return;
     }
 
-    this.socket = io('http://localhost:3000', {
+    this.socket = io('https://backend.codemy.jayadevnair.in', {
       auth: { token, refreshToken, type },
       timeout: 45000,
       reconnection: true,
