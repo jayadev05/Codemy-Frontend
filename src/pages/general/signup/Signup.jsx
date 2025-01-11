@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../../../store/slices/userSlice";
 import { addAdmin } from "../../../store/slices/adminSlice";
 import { addTutor } from "../../../store/slices/tutorSlice";
+import axiosInstance from "@/config/axiosConfig";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -118,6 +119,8 @@ export default function Signup() {
         email: formData.email,
       });
 
+      console.log(response)
+
       if (response.data.success) {
         setOtpSent(true);
         setIsModalVisible(true);
@@ -167,6 +170,7 @@ export default function Signup() {
         return;
       }
       await handleSendOtp();
+
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to send OTP");
     } finally {
