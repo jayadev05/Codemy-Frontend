@@ -5,7 +5,7 @@ import { selectTutor } from "../../store/slices/tutorSlice";
 import { selectAdmin } from "../../store/slices/adminSlice";
 import { Navigate } from "react-router-dom";
 
-function ProtectedRoute({ children, userType, isLoginPage = false , isHomePaage = false }) {
+function ProtectedRoute({ children, userType, isLoginPage = false , isHomePage = false }) {
   const user = useSelector(selectUser);
   const tutor = useSelector(selectTutor);
   const admin = useSelector(selectAdmin);
