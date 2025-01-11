@@ -38,8 +38,6 @@ export default function CourseListing() {
 
   const [categories, setCategories] = useState([]);
 
- 
-
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -72,8 +70,6 @@ export default function CourseListing() {
   };
 
   const handleScroll = () => {
-
-
     if (
       window.innerHeight + document.documentElement.scrollTop + 200 + 1 >=
       document.documentElement.scrollHeight
@@ -274,8 +270,6 @@ export default function CourseListing() {
             </div>
           </div>
         </div>
-
-        
       </div>
     </div>
   );
