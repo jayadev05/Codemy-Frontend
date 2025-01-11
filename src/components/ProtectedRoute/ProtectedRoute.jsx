@@ -5,7 +5,7 @@ import { selectTutor } from "../../store/slices/tutorSlice";
 import { selectAdmin } from "../../store/slices/adminSlice";
 import { Navigate } from "react-router-dom";
 
-function ProtectedRoute({ children, userType, isLoginPage = false }) {
+function ProtectedRoute({ children, userType, isLoginPage = false , isHomePaage = false }) {
   const user = useSelector(selectUser);
   const tutor = useSelector(selectTutor);
   const admin = useSelector(selectAdmin);
@@ -15,7 +15,7 @@ function ProtectedRoute({ children, userType, isLoginPage = false }) {
   const token = localStorage.getItem("accessToken");
 
   //  If the route is for the login page and a user is already authenticated, redirect them
-  if (isLoginPage && activeUser && token) {
+  if ( (isLoginPage || isHomePage ) && activeUser && token) {
     return (
       <Navigate
         to={activeUser !== "user" ? `/${activeUser}/dashboard` : `/`}
