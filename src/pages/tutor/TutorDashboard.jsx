@@ -19,7 +19,7 @@ import { WithdrawDialog } from "@/components/layout/tutor/WithdrawalModal";
 import { WithdrawalHistory } from "@/components/layout/tutor/WithdrawalHistory";
 import axiosInstance from "@/config/axiosConfig";
 import TutorHeader from "@/components/layout/tutor/TutorHeader";
-import defProfile from "../../assets/user-profile.png";
+
 
 const chartData = [
   { name: "Mon", value1: 70, value2: 120, value3: 90 },

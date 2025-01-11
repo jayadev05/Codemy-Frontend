@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router';
 import axiosInstance from '@/config/axiosConfig';
 import { logoutTutor, selectTutor } from '@/store/slices/tutorSlice';
+import defProfile from "../../../assets/user-profile.png";
 
 function TutorHeader({heading,subheading}) {
     const tutor=useSelector(selectTutor);
