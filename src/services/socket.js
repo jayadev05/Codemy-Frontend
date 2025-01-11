@@ -204,21 +204,7 @@ joinRoom(roomId) {
     });
   }
   
-  acknowledgeCall(from) {
-    if (!this.isConnected()) {
-      return Promise.reject(new Error('Socket not connected'));
-    }
-
-    return new Promise((resolve, reject) => {
-      this.socket.emit('acknowledge-call', { from }, (response) => {
-        if (response?.error) {
-          reject(new Error(response.error));
-        } else {
-          resolve(response);
-        }
-      });
-    });
-  }
+  
   
   
 

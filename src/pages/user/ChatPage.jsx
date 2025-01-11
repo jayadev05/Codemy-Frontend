@@ -94,8 +94,6 @@ export default function ChatInterface() {
           return;
         }
     
-        // Acknowledge the call first
-        await socketService.acknowledgeCall(data.from);
     
         // Then update the UI state
         setIncomingCallInfo({

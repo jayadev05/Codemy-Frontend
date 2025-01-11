@@ -88,8 +88,6 @@ export default function TutorChatPage() {
           return;
         }
     
-        // Acknowledge the call first
-        await socketService.acknowledgeCall(data.from);
     
         // Then update the UI state
         setIncomingCallInfo({
@@ -98,6 +96,7 @@ export default function TutorChatPage() {
           callerData: data.callerData,
           signalData: data.signalData,
         });
+        
     
       } catch (error) {
         console.error("Error handling incoming call:", error);
@@ -907,10 +906,9 @@ const createAnswerPeer = (mediaStream) => {
     });
 
     // Set up signal handler before processing the offer
-    let answerSent = false;
+  
     peer.on("signal",  (signalData) => {
-        if (signalData.type === "answer" && !answerSent) {
-            answerSent = true;
+        
             try {
                  socketService.answerCall({
                     signalData,
@@ -920,7 +918,7 @@ const createAnswerPeer = (mediaStream) => {
                 console.error("Failed to send answer:", error);
                 handleEndCall();
             }
-        }
+        
     });
 
     connectionRef.current = peer;
