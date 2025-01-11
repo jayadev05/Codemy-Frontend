@@ -35,7 +35,7 @@ const StudentManagement = () => {
       const response = await axiosInstance.get("/admin/students", {
         withCredentials: true,
       });
-      console.log("response data length ", response.data.students.length);
+   
       setStudents(response.data.students || []);
     } catch (err) {
       setError("Failed to fetch students");

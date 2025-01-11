@@ -9,7 +9,7 @@ export default function CoursePreview() {
   const [activeLesson, setActiveLesson] = useState(null);
 
   const course = useSelector(selectCourse);
-  console.log("course in state",course);
+ 
   
 
   // Helper function to format duration

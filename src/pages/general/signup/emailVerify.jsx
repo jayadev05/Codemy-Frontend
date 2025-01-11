@@ -86,7 +86,7 @@ export default function EmailVerify({ formData, setIsModalVisible }) {
 
     try {
       setLoading(true);
-      const response = await axios.post("/user/otp/send", {
+      const response = await axiosInstance.post("/user/otp/send", {
         email: formData.email,
       });
 

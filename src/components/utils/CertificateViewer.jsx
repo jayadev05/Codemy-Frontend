@@ -27,8 +27,7 @@ const CertificateViewer = ({ certificate }) => {
         setError(null);
         setDebugInfo("Fetching started...");
 
-        console.log("Fetching file:", fileUrl);
-        console.log("MIME Type:", certificate.mimeType);
+     
 
         const response = await fetch(fileUrl, {
           credentials: "include",
@@ -40,7 +39,7 @@ const CertificateViewer = ({ certificate }) => {
         setDebugInfo(
           (prev) => prev + "\nResponse received: " + response.status
         );
-        console.log("Response:", response);
+      
 
         if (!response.ok) {
           throw new Error(
@@ -49,7 +48,7 @@ const CertificateViewer = ({ certificate }) => {
         }
 
         const blob = await response.blob();
-        console.log("Blob received:", blob);
+     
         setDebugInfo((prev) => prev + "\nBlob size: " + blob.size);
 
         const blobUrl = URL.createObjectURL(blob);

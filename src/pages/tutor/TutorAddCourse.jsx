@@ -63,7 +63,7 @@ export default function AddCourse() {
     lessons: courseData.curriculum,
     tutorId: tutor._id,
   };
-  console.log("payload:", payload);
+
 
   const [activeTab, setActiveTab] = useState(0);
 
@@ -210,10 +210,7 @@ export default function AddCourse() {
       );
     });
 
-    console.log("Curriculum Validation:", {
-      totalLessons: curriculumArray.length,
-      isValid,
-    });
+    
 
     return isValid;
   };

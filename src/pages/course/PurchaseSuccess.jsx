@@ -28,7 +28,7 @@ const PurchaseCompleted = () => {
     fetchOrderDetails();
   }, []);
 
-  console.log("order in success oage", order);
+
 
   const navigate = useNavigate();
 

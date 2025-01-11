@@ -69,7 +69,7 @@ export default function Home() {
 
   const cart = useSelector(selectCart);
 
-  console.log(wishlist, "asdasdadasd");
+ 
 
   const navigate = useNavigate();
   const dispatch = useDispatch();

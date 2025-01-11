@@ -66,7 +66,7 @@ export default function TutorChatPage() {
   const [isAudioEnabled, setIsAudioEnabled] = useState(true);
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
 
-  console.log("My socket id :", socketService.socket?.id);
+
 
   //get current user role
   const userType = getUserRoleFromToken();
@@ -80,7 +80,7 @@ export default function TutorChatPage() {
   useEffect(() => {
     const handleIncomingCall = async (data) => {
       try {
-        console.log("Incoming call from:", data.from);
+        
         
         // First ensure we have valid data
         if (!data?.from || !data?.callerData || !data?.signalData) {
@@ -135,7 +135,7 @@ export default function TutorChatPage() {
       }
     };
 
-    console.log("Setting up socket event listeners");
+    
     socketService.on("incoming-call", handleIncomingCall);
     socketService.on("call-accepted", handleCallAccepted);
     socketService.on("call-rejected", handleCallRejected);
@@ -143,7 +143,7 @@ export default function TutorChatPage() {
     socketService.on("user-disconnected", handleUserDisconnected);
 
     return () => {
-      console.log("Cleaning up socket event listeners");
+     
       socketService.off("incoming-call", handleIncomingCall);
       socketService.off("call-accepted", handleCallAccepted);
       socketService.off("call-rejected", handleCallRejected);
@@ -170,9 +170,9 @@ export default function TutorChatPage() {
     let currentTypingTimeout = null;
 
     const handleStatusUpdate = async () => {
-      console.log("Other user is online", isSubscribed);
+     
       if (isSubscribed) {
-        console.log("fetching chats");
+     
         await fetchChats();
       }
     };
@@ -180,7 +180,7 @@ export default function TutorChatPage() {
     const handleRecieveMessage = (message) => {
       if (!isSubscribed) return;
 
-      console.log("Received message event triggered:", message);
+      
 
       const validatedMessage = {
         ...message,
@@ -239,13 +239,13 @@ export default function TutorChatPage() {
 
     const handleTyping = ({ senderId }) => {
       if (!isSubscribed) return;
-      console.log("Typing event received from:", senderId);
+     
       setIsTyping(true);
     };
 
     const handleStopTyping = ({ senderId }) => {
       if (!isSubscribed) return;
-      console.log("Stop typing event received from:", senderId);
+     
       setIsTyping(false);
     };
 
@@ -265,12 +265,7 @@ export default function TutorChatPage() {
       if (!isSubscribed || !data) return;
 
       const { chatId, userType, unreadCount, messageIds = [] } = data;
-      console.log("message-read event received:", {
-        chatId,
-        userType,
-        unreadCount,
-        messageIds,
-      });
+     
 
       setChats((prevChats) =>
         prevChats.map((chat) =>
@@ -387,7 +382,7 @@ export default function TutorChatPage() {
   const fetchMessages = async (chatId) => {
     try {
       const response = await axiosInstance.get(`/chat/${chatId}/messages`);
-      console.log(response);
+     
       setMessages(response.data);
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -527,7 +522,7 @@ export default function TutorChatPage() {
           response.data.contentType || (selectedFile ? "media" : "text"),
       };
 
-      console.log("validated response", validatedResponse);
+     
 
       setMessages((prevMessages) => [...prevMessages, validatedResponse]);
       setInputMessage("");
@@ -674,12 +669,11 @@ export default function TutorChatPage() {
           res.data.secure_url
         )}&embedded=true`;
 
-        console.log(viewerUrl);
-        console.log("PDF URL:", url);
+       
         return url;
       }
 
-      console.log("res.data:", res.data);
+   
 
       return res.data.secure_url;
     } catch (error) {

@@ -44,7 +44,7 @@ export default function CategoryManagement() {
   const fetchCategories = async () => {
     try {
       const response = await axiosInstance.get("/admin/categories");
-      console.log(response.data);
+    
       setCategories(response.data);
     } catch (error) {
       console.log(error);

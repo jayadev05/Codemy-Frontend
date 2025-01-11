@@ -35,7 +35,7 @@ const Curriculum = ({ initialData, sendData }) => {
   });
 
   const [progress, setProgress] = useState(0);
-  console.log(progress);
+ 
 
   const videoInputRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -109,8 +109,7 @@ const Curriculum = ({ initialData, sendData }) => {
 
   // Unified file upload handler
   const handleFileUpload = async (inputRef, fileType, lessonId) => {
-    console.log("input ref", inputRef);
-    console.log("input ref current", inputRef.current);
+
 
     const input = inputRef.current;
 

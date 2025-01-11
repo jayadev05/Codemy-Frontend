@@ -408,7 +408,7 @@ export default function ChatInterface() {
         params: { courseIds },
       });
 
-      console.log("response", response);
+      
 
       setTutors(response.data.tutors);
     } catch (error) {
@@ -520,13 +520,13 @@ export default function ChatInterface() {
         contentType: selectedFile ? "media" : "text", // Explicitly set content type
       };
 
-      console.log("Sending message with data:", messageData);
+     
 
       const response = await axiosInstance.post(
         "/chat/messages",
         messageData
       );
-      console.log("This is ti", response.data.contentType);
+    
 
       // Ensure contentType exists in the response data
       const validatedResponse = {
@@ -680,8 +680,7 @@ export default function ChatInterface() {
           res.data.secure_url
         )}&embedded=true`;
 
-        console.log(viewerUrl);
-        console.log("PDF URL:", url);
+       
         return url;
       }
 

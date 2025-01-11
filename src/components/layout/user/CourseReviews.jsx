@@ -18,7 +18,7 @@ const StarRating = ({ rating }) => (
 
 const CourseReviews = ({ reviews }) => {
 
-  console.log('hjkhkjjh',reviews)
+  
   if (reviews?.length === 0) {
     return (
       <div className="py-8">

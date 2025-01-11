@@ -90,7 +90,7 @@ export default function TutorCourses() {
 
   const handleDeleteConfirm = async () => {
     try {
-      console.log(courseToDelete);
+      
       if (courseToDelete) {
         await axiosInstance.delete(
           `/course/course?courseId=${courseToDelete}&tutorId=${tutorId}`

@@ -16,6 +16,7 @@ import { useNavigate } from "react-router";
 import { selectUser } from "../../store/slices/userSlice";
 import toast from "react-hot-toast";
 import axios from "axios";
+import axiosInstance from "@/config/axiosConfig";
 import { addToCart, selectCart } from "../../store/slices/cartSlice";
 
 const WishlistPage = () => {
@@ -29,7 +30,7 @@ const WishlistPage = () => {
 
   const handleRemoveItem = async (productId) => {
     try {
-      const response = await axios.delete("/user/wishlist/remove", {
+      const response = await axiosInstance.delete("/user/wishlist/remove", {
         params: { userId: user._id, courseId: productId },
       });
       dispatch(removeFromWishlist(productId));
@@ -42,7 +43,7 @@ const WishlistPage = () => {
 
   const handleAddToCart = async (courseId, price) => {
     try {
-      const response = await axios.post("/user/cart", {
+      const response = await axiosInstance.post("/user/cart", {
         courseId,
         userId: user._id,
       });

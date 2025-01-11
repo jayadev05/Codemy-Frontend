@@ -172,7 +172,7 @@ const SettingsForm = () => {
       }
 
       const data = await res.json();
-      console.log("Full Cloudinary response:", data);
+    
 
       // For PDFs, always use Google Docs viewer
       if (fileType === "file") {

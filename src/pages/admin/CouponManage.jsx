@@ -93,7 +93,7 @@ const admin= useSelector(selectAdmin);
 
       const response= await axiosInstance.post('/admin/coupons',formData);
 
-      console.log("response status",response.status);
+    
       
       if(response.status===200){
         await fetchCoupons()

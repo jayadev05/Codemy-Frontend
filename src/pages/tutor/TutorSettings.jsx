@@ -11,7 +11,7 @@ import TutorHeader from "@/components/layout/tutor/TutorHeader";
 
 export default function TutorSettings() {
   const tutor = useSelector(selectTutor);
-  console.log(tutor);
+
   const dispatch = useDispatch();
 
   // State objects for Personal Information and Password Change
@@ -187,7 +187,7 @@ export default function TutorSettings() {
       }
 
       const data = await res.json();
-      console.log("Full Cloudinary response:", data);
+      
 
       // For PDFs, always use Google Docs viewer
       if (fileType === "file") {

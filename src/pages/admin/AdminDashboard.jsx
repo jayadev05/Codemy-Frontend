@@ -101,8 +101,7 @@ export default function Dashboard() {
   const [totalStudents, setTotalStudents] = useState(null);
   const [totalTutors, setTotalTutors] = useState(null);
 
-  console.log(totalStudents);
-  console.log(totalTutors);
+
 
   useEffect(() => {
     fetchData();

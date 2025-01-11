@@ -103,7 +103,7 @@ export default function ReportManagement() {
   }, [admin?._id]);
 
   useEffect(() => {
-    console.log(reports);
+  
 
     const results = reports.filter(
       (report) =>
@@ -155,7 +155,7 @@ export default function ReportManagement() {
   };
 
   const handleReport = async (reportId, userId) => {
-    console.log(reportId, userId);
+  
 
     try {
       const response = await axiosInstance.put("/admin/reports", {

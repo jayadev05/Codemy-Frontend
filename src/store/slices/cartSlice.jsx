@@ -12,7 +12,6 @@ const cartSlice = createSlice({
     addToCart: (state, action) => {
       const { courseId, price } = action.payload;
 
-      console.log(price,'asdasdasd')
 
       const normalizedPrice = price?.$numberDecimal 
         ? parseFloat(price.$numberDecimal) 

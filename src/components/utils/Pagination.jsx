@@ -4,7 +4,7 @@ import React from 'react';
 function Pagination({ totalData, dataPerPage, currentPage, setCurrentPage, className }) {
    const totalPages = Math.ceil(totalData / dataPerPage);
 
-   console.log(totalPages,"totalpages",totalData,"totaldata")
+   
 
   
    const generatePageNumbers = () => {

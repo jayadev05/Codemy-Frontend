@@ -155,11 +155,11 @@ export default function Signup() {
         username: formData.username,
       });
 
-      console.log(checkEmailResponse.data);
+     
 
       // If email or username exists, show error and stop further process
       const { emailExists, userNameExists } = checkEmailResponse.data;
-      console.log("email exist ", emailExists, userNameExists);
+     
 
       // Set both errors if applicable
       if (emailExists || userNameExists) {

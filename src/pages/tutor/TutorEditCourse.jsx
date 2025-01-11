@@ -23,7 +23,7 @@ function TutorEditCourse() {
   const tutor = useSelector(selectTutor);
   const courseFromRedux = useSelector(selectCourse);
 
-  console.log(courseFromRedux, "asdasd");
+  
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -53,7 +53,7 @@ function TutorEditCourse() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [preview, setPreview] = useState(null);
 
-  console.log("lesson in page", lessons);
+ 
 
   // Sync Redux course state with local state
 
@@ -187,7 +187,7 @@ function TutorEditCourse() {
       }
 
       const data = await res.json();
-      console.log("Full Cloudinary response:", data);
+      
 
       // // For PDFs, always use Google Docs viewer
       // if (fileType === "file") {

@@ -38,7 +38,7 @@ export default function CourseListing() {
 
   const [categories, setCategories] = useState([]);
 
-  console.log(filters);
+ 
 
   const [page, setPage] = useState(1);
 
@@ -72,9 +72,7 @@ export default function CourseListing() {
   };
 
   const handleScroll = () => {
-    console.log("height", document.documentElement.scrollHeight);
-    console.log("top", document.documentElement.scrollTop);
-    console.log("window", window.innerHeight);
+
 
     if (
       window.innerHeight + document.documentElement.scrollTop + 200 + 1 >=
@@ -277,13 +275,7 @@ export default function CourseListing() {
           </div>
         </div>
 
-        {/* Apply Filters Button */}
-        <button
-          onClick={() => setIsFilterOpen(false)}
-          className="w-full bg-[#ff6738] text-white py-2 rounded-md hover:bg-orange-600 transition-colors"
-        >
-          Apply Filters
-        </button>
+        
       </div>
     </div>
   );

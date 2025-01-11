@@ -154,7 +154,7 @@ const MainHeader = ({ showModal, isLoggedIn }) => {
 
   const handleDeleteNotification = async (userId) => {
     try {
-      const response = await axios.patch(
+      const response = await axiosInstance.patch(
         `/user/users/${userId}/notifications/clear`
       );
       dispatch(addUser(response.data.updatedUser));

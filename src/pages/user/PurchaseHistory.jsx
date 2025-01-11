@@ -131,7 +131,7 @@ const PurchaseHistory = () => {
       });
 
       if (response.status === 200) {
-        console.log(response, "asdasd");
+   
         const orderId = response.data.orderId;
         navigate(`/user/payment-success/${orderId}`);
         dispatch(clearCart(cart));

@@ -191,7 +191,7 @@ const LessonAddModal = ({
 
     try {
       const payload = { ...lessonData };
-      console.log("payload", payload);
+  
 
       const response = await axiosInstance.post("/course/lessons", payload);
 

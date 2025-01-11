@@ -49,7 +49,7 @@ export default function CourseDetails() {
     fetchReviews();
   }, [course._id]);
 
-  console.log("reviews", reviews);
+
 
   const handleAddToCart = async (courseId, price) => {
     try {
@@ -103,7 +103,7 @@ export default function CourseDetails() {
         params: { courseId },
       });
 
-      console.log("response:", response.data);
+    
 
       setCourse(response.data.course);
     } catch (error) {
@@ -128,7 +128,7 @@ export default function CourseDetails() {
 
   const ratings = course?.ratings?.length > 0 ? course.ratings : [0];
 
-  console.log("ratings", ratings);
+
 
   // Calculate rating statistics
   const totalRatings = ratings.length;

@@ -11,7 +11,7 @@ function AdvancedInfo({initialData ,sendData,errors}) {
   const [thumbnailPreview, setThumbnailPreview] = useState(initialData?.thumbnail || null);
   const [courseContent, setCourseContent] = useState(initialData?.courseContent || '');
   const [progress, setProgress] = useState(0); 
-  console.log("progress",progress);
+ 
   
     const { 
       value: price, 
@@ -123,7 +123,7 @@ function AdvancedInfo({initialData ,sendData,errors}) {
          
         });
     
-        console.log("Cloudinary upload response:", res.data);
+     
     
         // For PDFs, always use Google Docs viewer
         if (fileType === 'file') {
