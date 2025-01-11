@@ -42,7 +42,6 @@ export default function ComposeModal({ open, onOpenChange, onChatCreated ,recipi
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => {
-      if (isOpen) fetchTutors()
       onOpenChange(isOpen)
     }}>
       <DialogContent className="max-w-md">

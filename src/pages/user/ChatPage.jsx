@@ -408,9 +408,10 @@ export default function ChatInterface() {
         params: { courseIds },
       });
 
-      
+      console.log(response)
 
       setTutors(response.data.tutors);
+
     } catch (error) {
       console.error("Error fetching tutors:", error);
     } finally {
