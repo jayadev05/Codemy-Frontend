@@ -196,6 +196,8 @@ joinRoom(roomId) {
       callerAvatar: data.callerAvatar,
       callerUserId: data.callerUserId
     });
+
+    console.log("Sending initiate call event")
   
     // Set up handlers for the call initiation response
     this.socket.once("call-failed", (error) => {
@@ -203,7 +205,6 @@ joinRoom(roomId) {
       // Handle call failure in your UI
     });
   }
-  
   
   
   

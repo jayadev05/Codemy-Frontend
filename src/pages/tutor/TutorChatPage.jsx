@@ -96,6 +96,8 @@ export default function TutorChatPage() {
           callerData: data.callerData,
           signalData: data.signalData,
         });
+
+        console.log("Incoming call from :",incomingCallInfo.from)
         
     
       } catch (error) {
@@ -840,10 +842,9 @@ const createInitiatorPeer = (mediaStream) => {
     });
 
     // Set up signal handler before emitting any signals
-    let signalAttempts = 0;
+ 
     peer.on("signal",  (signalData) => {
-        if (signalData.type === "offer" && signalAttempts === 0) {
-            signalAttempts++;
+        
             try {
                  socketService.initializeCall({
                     recieverId: receiverId,
@@ -857,7 +858,7 @@ const createInitiatorPeer = (mediaStream) => {
                 console.error("Failed to initialize call:", error);
                 handleEndCall();
             }
-        }
+        
     });
 
     connectionRef.current = peer;
