@@ -96,7 +96,7 @@ function AppContent() {
         {/* generic routes */}
         <Route path="/signup" element={<SignUp/>} />
         <Route path="/login" element={<ProtectedRoute isLoginPage><Login /></ProtectedRoute>} />
-        <Route path="/" element={<ProtectedRoute isHomePage><Home /></ProtectedRoute>} />
+        <Route path="/" element={<Home />} />
         <Route path="/about" element={<AboutPage/>} />
         <Route path="/contact-us" element={<ContactPage/>} />
         <Route path="/reset-password/:token" element={<ResetPassword/>} />
