@@ -51,16 +51,15 @@ const Login = () => {
           case "admin":
             dispatch(addAdmin(userData));
 
-          
             break;
           case "user":
             dispatch(addUser(userData));
-           
+
             break;
           case "tutor":
             // Ensure you have a tutorSlice with addTutor action
             dispatch(addTutor(userData));
-            
+
             break;
           default:
             console.warn("Unknown user type:", userType);
