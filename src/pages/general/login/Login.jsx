@@ -171,7 +171,7 @@ const Login = () => {
       toast.error("Failed to connect with Google. Please try again.");
       setIsLoading(false); // Make sure to handle loading state on error
     },
-    flow: "auth-code",
+    flow: "GeneralOAuthFlow",
   });
 
   return (
