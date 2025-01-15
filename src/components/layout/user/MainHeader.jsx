@@ -249,7 +249,7 @@ const MainHeader = ({ showModal, isLoggedIn }) => {
         <div className="flex items-center justify-between">
           {/* Logo and Brand */}
           <div className="flex items-center space-x-4">
-            <img src={logo} alt="Codemy Logo" className="w-8" />
+            <img onclick={()=>navigate("/")} src={logo} alt="Codemy Logo" className="w-8" />
             <h1 className="text-2xl font-bold text-black dark:text-white hidden sm:block">
               Codemy
             </h1>
