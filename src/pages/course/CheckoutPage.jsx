@@ -218,7 +218,8 @@ export default function CheckoutPage() {
         const orderId = response.data.orderId;
         navigate(`/user/payment-success/${orderId}`);
         dispatch(clearCart(cart));
-        dispatch(addUser(response.data?.updatedUser));
+        console.log("updatedUser",response.data.updatedUser)
+        dispatch(addUser(response.data.updatedUser));
         toast.success("Course purchased successfully!");
       }
     } catch (error) {
