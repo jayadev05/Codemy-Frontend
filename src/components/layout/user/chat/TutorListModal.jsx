@@ -11,6 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input"
 import { Search } from 'lucide-react'
 import axiosInstance from "@/config/axiosConfig"
+import defProfile from "../../../../assets/user-profile.png";
 
 
 export default function ComposeModal({ open, onOpenChange, onChatCreated ,recipients,user }) {
@@ -75,7 +76,7 @@ export default function ComposeModal({ open, onOpenChange, onChatCreated ,recipi
                 >
                   <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10">
-                      <img crossOrigin='anonymous' referrerPolicy='no-referrer' src={tutor.profileImg} alt={tutor.fullName} />
+                      <img crossOrigin='anonymous' referrerPolicy='no-referrer' src={tutor.profileImg || defProfile} alt={tutor.fullName} />
                       <AvatarFallback>{tutor.fullName.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div className="text-left">
