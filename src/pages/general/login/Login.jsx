@@ -166,14 +166,16 @@ const Login = () => {
   };
 
   const googleLogin = useGoogleLogin({
-    onSuccess: handleGoogleResponse,
-    onError: (error) => {
-      console.error("Google Login Error:", error);
-      toast.error("Failed to connect with Google. Please try again.");
-      setIsLoading(false); // Make sure to handle loading state on error
-    },
-    flow: "GeneralOAuthFlow",
-  });
+  onSuccess: handleGoogleResponse,
+  onError: (error) => {
+    console.error("Google Login Error:", error);
+    toast.error("Failed to connect with Google. Please try again.");
+    setIsLoading(false);
+  },
+  flow: "GeneralOAuthFlow",
+  redirect_uri: "https://codemy.jayadevnair.in", 
+});
+
 
   return (
     <>
