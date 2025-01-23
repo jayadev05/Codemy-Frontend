@@ -10,7 +10,7 @@ function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <GoogleOAuthProvider clientId="532055856231-5bvv6o4cog4srbvvghv969kfenmd33cl.apps.googleusercontent.com">
+        <GoogleOAuthProvider clientId="232393055953-osjvrkcea9fl40u1ijn4imqj7u6vt8p1.apps.googleusercontent.com">
           <Toaster position="top-right"/>
           <AppContent />
         </GoogleOAuthProvider>
