@@ -1192,23 +1192,25 @@ const setupPeerEventListeners = (peer) => {
                       </svg>
                     </button>
                     <div className="relative">
-                      <Avatar className="h-8 w-8">
-                        <img
-                          crossOrigin="anonymous"
-                          referrerPolicy="no-referrer"
-                          src={
-                            userType === "user"
-                              ? selectedChat.tutorId?.profileImg
-                              : selectedChat.userId?.profileImg
-                          }
-                          alt="Chat partner's avatar"
-                        />
-                        <AvatarFallback>
-                          {userType === "user"
-                            ? selectedChat.tutorId?.fullName?.charAt(0)
-                            : selectedChat.userId?.fullName?.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
+                      <Avatar className="h-12 w-12">
+                              {otherUser?.profileImg ? (
+                                <AvatarImage
+                                  referrerPolicy="no-referrer"
+                                  crossOrigin="anonymous"
+                                  src={otherUser?.profileImg}
+                                  alt={`${
+                                    otherUser?.fullName || "User"
+                                  }'s avatar`}
+                                  onError={(e) => {
+                                    e.target.src = "/placeholder.svg"; // Fallback image
+                                  }}
+                                />
+                              ) : (
+                                <AvatarFallback>
+                                  {(otherUser?.fullName || "?").charAt(0)}
+                                </AvatarFallback>
+                              )}
+                            </Avatar>
                     </div>
                     <div>
                       <h2 className="font-semibold text-sm">
