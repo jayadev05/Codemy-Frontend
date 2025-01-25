@@ -798,28 +798,28 @@ export default function TutorChatPage() {
 
     setIsCalling(true);
     setoutgoingCallInfo({
-      callerData: {
-        avatar: userType === "user" ? selectedChat?.tutorId?.profileImg : selectedChat?.userId?.profileImg,
-        name: userType === "user" ? selectedChat?.tutorId?.fullName : selectedChat?.userId?.fullName,
-      },
+        callerData: {
+            avatar: userType === "user" ? selectedChat?.tutorId?.profileImg : selectedChat?.userId?.profileImg,
+            name: userType === "user" ? selectedChat?.tutorId?.fullName : selectedChat?.userId?.fullName,
+        },
     });
 
     try {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
+        const mediaStream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: true,
+        });
 
-      setStream(mediaStream);
+        setStream(mediaStream);
 
-      if (myVideoRef.current) {
-        myVideoRef.current.srcObject = mediaStream;
-      }
+        if (myVideoRef.current) {
+            myVideoRef.current.srcObject = mediaStream;
+        }
 
-      createInitiatorPeer(mediaStream);
+        createInitiatorPeer(mediaStream);
     } catch (error) {
-      console.error("Error accessing media devices:", error);
-      setIsCalling(false);
+        console.error("Error accessing media devices:", error);
+        setIsCalling(false);
     }
 };
 
@@ -842,11 +842,12 @@ const createInitiatorPeer = (mediaStream) => {
     });
 
     // Set up signal handler before emitting any signals
- 
-    peer.on("signal",  (signalData) => {
-        
+    let signalAttempts = 0;
+    peer.on("signal", (signalData) => {
+        if (signalData.type === "offer" && signalAttempts === 0) {
+            signalAttempts++;
             try {
-                 socketService.initializeCall({
+                socketService.initializeCall({
                     recieverId: receiverId,
                     signalData,
                     from: socketService.socket.id,
@@ -858,13 +859,12 @@ const createInitiatorPeer = (mediaStream) => {
                 console.error("Failed to initialize call:", error);
                 handleEndCall();
             }
-        
+        }
     });
 
     connectionRef.current = peer;
     setupPeerEventListeners(peer);
 };
-
 const answerCall = async () => {
     if (!incomingCallInfo?.signalData || connectionRef.current) return;
 
