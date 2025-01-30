@@ -22,6 +22,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useMemo, useState } from 'react'
+import Pagination from '@/components/utils/Pagination'
 
 const statusStyles = {
   pending: {
@@ -45,8 +47,26 @@ const statusStyles = {
 }
 
 export function WithdrawalHistory({ withdrawals = [] }) {
+
+  const dataPerPage=5;
+  const [page,setPage]=useState(1);
+
+  const totalData = withdrawals.length;
+
+  const paginatedWithdrawals = useMemo(() => {
+
+    let startIndex = (page - 1) * dataPerPage;
+    let endIndex = page * dataPerPage;
+
+    return withdrawals.slice(startIndex, endIndex);
+
+  }, [page, withdrawals]);
+
+ 
+
+
   return (
-    <Card className='mb-12'>
+    <Card className="mb-12">
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
           <CardTitle>Withdrawal History</CardTitle>
@@ -72,21 +92,20 @@ export function WithdrawalHistory({ withdrawals = [] }) {
               <TableHead>Amount</TableHead>
               <TableHead>Payment Method</TableHead>
               <TableHead>Status</TableHead>
-              
             </TableRow>
           </TableHeader>
           <TableBody>
-            {withdrawals.length === 0 ? (
+            {paginatedWithdrawals.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground">
+                <TableCell colSpan={4} className="text-center text-muted-foreground">
                   No withdrawal history to show
                 </TableCell>
               </TableRow>
             ) : (
-              withdrawals.map((withdrawal) => {
-                const status = statusStyles[withdrawal.status]
-                const StatusIcon = status.icon
-                
+              paginatedWithdrawals.map((withdrawal) => {
+                const status = statusStyles[withdrawal.status];
+                const StatusIcon = status.icon;
+
                 return (
                   <TableRow key={withdrawal._id}>
                     <TableCell>
@@ -110,15 +129,22 @@ export function WithdrawalHistory({ withdrawals = [] }) {
                         {status.label}
                       </Badge>
                     </TableCell>
-                    
                   </TableRow>
-                )
+                );
               })
             )}
           </TableBody>
         </Table>
       </CardContent>
+
+      <Pagination
+        dataPerPage={dataPerPage}
+        setCurrentPage={setPage}
+        currentPage={page}
+        totalData={totalData}
+        className='justify-center my-5'
+      />
     </Card>
-  )
+  );
 }
 
