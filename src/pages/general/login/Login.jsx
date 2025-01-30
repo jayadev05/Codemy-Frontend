@@ -97,7 +97,7 @@ const Login = () => {
 
   const handleGoogleResponse = async (authResult) => {
     try {
-      console.log(authresult)
+    
       setIsLoading(true);
 
       if (authResult.code) {
