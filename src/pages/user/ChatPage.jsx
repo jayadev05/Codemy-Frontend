@@ -1183,235 +1183,197 @@ const handleEndCall = (sendSocketEvent = true) => {
         </div>
 
         {/* Chat Area */}
-        <div
-          className={`${
-            !selectedChat ? "hidden" : "flex flex-col w-full"
-          } md:flex md:flex-1`}
-        >
-          {selectedChat ? (
-            <>
-              <div className="flex items-center justify-between p-3 border-b">
-                <div className="flex items-center gap-2">
-                  <button
-                    className="md:hidden"
-                    onClick={() => setSelectedChat(null)}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+           <div
+      className={`${!selectedChat ? "hidden" : "flex flex-col w-full"} md:flex md:flex-1 h-screen max-h-screen`} // Fixed height to screen
+    >
+      {selectedChat ? (
+        <>
+          {/* Header - Fixed height */}
+          <div className="flex items-center justify-between p-3 md:p-4 border-b bg-background z-10 h-[60px] min-h-[60px]">
+            <div className="flex items-center gap-2 md:gap-3">
+              <button className="md:hidden" onClick={() => setSelectedChat(null)}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 md:h-6 md:w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <div className="relative">
+                <Avatar className="h-8 w-8 md:h-10 md:w-10">
+                  <img
+                    crossOrigin="anonymous"
+                    referrerPolicy="no-referrer"
+                    src={userType === "user" ? selectedChat.tutorId?.profileImg : selectedChat.userId?.profileImg}
+                    alt="Chat partner's avatar"
+                  />
+                  <AvatarFallback>
+                    {userType === "user"
+                      ? selectedChat.tutorId?.fullName?.charAt(0)
+                      : selectedChat.userId?.fullName?.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+              <div>
+                <h2 className="font-semibold text-sm md:text-base">
+                  {userType === "user" ? selectedChat.tutorId?.fullName : selectedChat.userId?.fullName}
+                </h2>
+                <p
+                  className={`text-xs md:text-sm ${
+                    selectedChat.isOnline[userType === "user" ? "tutor" : "student"]
+                      ? "text-green-600"
+                      : "text-gray-500"
+                  }`}
+                >
+                  {selectedChat.isOnline[userType === "user" ? "tutor" : "student"] ? "Online" : "Offline"}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 md:gap-3">
+              <Video className="cursor-pointer h-5 w-5 md:h-6 md:w-6" onClick={initiateCall} />
+              <div className="relative">
+                <Button
+                  onClick={() => handleOptionsModalOpen()}
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 md:h-10 md:w-10"
+                >
+                  <MoreHorizontal className="h-5 w-5 md:h-6 md:w-6" />
+                </Button>
+                {optionsModalOpen && (
+                  <div className="absolute right-0 md:right-4 mt-2 w-44 md:w-48 bg-white rounded-lg shadow-lg py-1 z-50 border border-gray-200">
+                    <button className="flex items-center px-3 md:px-4 py-2 text-xs md:text-sm text-gray-700 hover:bg-orange-50 w-full transition-colors">
+                      <AlertTriangle className="w-4 h-4 mr-2 text-orange-500" />
+                      Block Tutor
+                    </button>
+                    <button
+                      onClick={handleDeleteChat}
+                      className="flex items-center px-3 md:px-4 py-2 text-xs md:text-sm text-gray-700 hover:bg-orange-50 w-full transition-colors"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 19l-7-7 7-7"
-                      />
-                    </svg>
-                  </button>
-                  <div className="relative">
-                    <Avatar className="h-8 w-8">
+                      <Trash2Icon className="w-4 h-4 mr-2 text-orange-500" />
+                      Delete chat
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Messages area - Scrollable, takes remaining height */}
+          <div className="flex-1 overflow-y-auto">
+            <div className="space-y-2 md:space-y-3 p-2 md:p-3">
+              {messages.map((message) => (
+                <div
+                  key={message._id}
+                  className={`flex gap-2 max-w-[80%] md:max-w-[85%] ${
+                    message.sender.userId === user._id ? "justify-end ml-auto" : ""
+                  }`}
+                >
+                  {message.sender.userId !== user._id && (
+                    <Avatar className="h-6 w-6 md:h-8 md:w-8 mt-1">
                       <img
                         crossOrigin="anonymous"
                         referrerPolicy="no-referrer"
-                        src={
-                          userType === "user"
-                            ? selectedChat.tutorId?.profileImg
-                            : selectedChat.userId?.profileImg
-                        }
-                        alt="Chat partner's avatar"
+                        src={userType === "user" ? selectedChat.tutorId?.profileImg : selectedChat.userId?.profileImg}
+                        alt="Sender's avatar"
                       />
                       <AvatarFallback>
-                        {userType === "user"
+                        {userType === "tutor"
                           ? selectedChat.tutorId?.fullName?.charAt(0)
                           : selectedChat.userId?.fullName?.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
-                  </div>
+                  )}
                   <div>
-                    <h2 className="font-semibold text-sm">
-                      {userType === "user"
-                        ? selectedChat.tutorId?.fullName
-                        : selectedChat.userId?.fullName}
-                    </h2>
-                    <p
-                      className={`text-xs ${
-                        selectedChat.isOnline[
-                          userType === "user" ? "tutor" : "student"
-                        ]
-                          ? "text-green-600"
-                          : "text-gray-500"
-                      }`}
-                    >
-                      {selectedChat.isOnline[
-                        userType === "user" ? "tutor" : "student"
-                      ]
-                        ? "Online"
-                        : "Offline"}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Video className="cursor-pointer" onClick={initiateCall} />
-                  <div className="relative">
-                    <Button
-                      onClick={() => handleOptionsModalOpen()}
-                      variant="ghost"
-                      size="icon"
-                    >
-                      <MoreHorizontal className="h-5 w-5" />
-                    </Button>
-                    {optionsModalOpen && (
-                      <div className="absolute right-4 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50 border border-gray-200">
-                        <button className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 w-full transition-colors">
-                          <AlertTriangle className="w-4 h-4 mr-2 text-orange-500" />
-                          Block Tutor
-                        </button>
-                        <button
-                          onClick={handleDeleteChat}
-                          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 w-full transition-colors"
-                        >
-                          <Trash2Icon className="w-4 h-4 mr-2 text-orange-500" />
-                          Delete chat
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <ScrollArea className="flex-1 p-3">
-                <div className="space-y-3">
-                  {messages.map((message) => (
                     <div
-                      key={message._id}
-                      className={`flex gap-2 max-w-[85%] ${
-                        message.sender.userId === user._id
-                          ? "justify-end ml-auto"
-                          : ""
+                      className={`rounded-2xl p-2 md:p-3 text-xs md:text-sm ${
+                        message.sender.userId === user._id ? "bg-[#ff6738] text-white" : "bg-[#ffeee8]"
                       }`}
                     >
-                      {message.sender.userId !== user._id && (
-                        <Avatar className="h-6 w-6 mt-1">
-                          <img
-                            crossOrigin="anonymous"
-                            referrerPolicy="no-referrer"
-                            src={
-                              userType === "user"
-                                ? selectedChat.tutorId?.profileImg
-                                : selectedChat.userId?.profileImg
-                            }
-                            alt="Sender's avatar"
-                          />
-                          <AvatarFallback>
-                            {userType === "tutor"
-                              ? selectedChat.tutorId?.fullName?.charAt(0)
-                              : selectedChat.userId?.fullName?.charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
-                      )}
-                      <div>
-                        <div
-                          className={`rounded-2xl p-2 text-sm ${
-                            message.sender.userId === user._id
-                              ? "bg-[#ff6738] text-white"
-                              : "bg-[#ffeee8]"
-                          }`}
-                        >
-                          {renderMessageContent(message)}
-                        </div>
-                        <div className="flex mt-1">
-                          {message.sender.userId === user._id && (
-                            <MessageStatus status={message.status} />
-                          )}
-                          <span className="text-xs text-gray-500 ml-2">
-                            {formatTime(
-                              message.createdAt || message.timestamps
-                            )}
-                          </span>
-                        </div>
-                      </div>
-                      {message.sender.userId === user._id && (
-                        <Avatar className="h-6 w-6 mt-1">
-                          <AvatarImage
-                            src={user?.profileImg}
-                            alt="Your avatar"
-                          />
-                          <AvatarFallback>
-                            {user?.fullName.charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
-                      )}
+                      {renderMessageContent(message)}
                     </div>
-                  ))}
-                  {isTyping && <TypingIndicator />}
-
-                  <div ref={messagesEndRef}></div>
-                </div>
-              </ScrollArea>
-
-              <div className="p-3 border-t">
-                {selectedFile && (
-                  <div className="mb-2 relative inline-block">
-                    {previewUrl && (
-                      <img
-                        src={previewUrl}
-                        alt="Preview"
-                        className="h-20 w-20 object-cover rounded-lg"
-                      />
-                    )}
-                    <button
-                      onClick={clearSelectedFile}
-                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
+                    <div className="flex mt-1">
+                      {message.sender.userId === user._id && <MessageStatus status={message.status} />}
+                      <span className="text-[10px] md:text-xs text-gray-500 ml-2">
+                        {formatTime(message.createdAt || message.timestamps)}
+                      </span>
+                    </div>
                   </div>
-                )}
-                <form onSubmit={handleSendMessage} className="flex gap-2">
-                  <input
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={handleFileSelect}
-                    accept="image/jpeg,image/png,image/gif,video/mp4"
-                    className="hidden"
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <ImageIcon className="h-5 w-5 text-gray-500" />
-                  </Button>
-                  <Input
-                    className="flex-1 text-sm"
-                    placeholder="Type your message"
-                    value={inputMessage}
-                    onChange={(e) => {
-                      setInputMessage(e.target.value);
-                      handleTyping();
-                    }}
-                    disabled={!!selectedFile}
-                  />
-                  <Button
-                    type="submit"
-                    className="bg-[#ff4f38] hover:bg-[#e63f2a]"
-                  >
-                    <span className="hidden sm:inline">Send</span>
-                    <Send className="h-4 w-4 sm:ml-2" />
-                  </Button>
-                </form>
-              </div>
-            </>
-          ) : (
-            <div className="hidden md:flex flex-1 items-center justify-center text-gray-500 text-sm">
-              Select a chat to start messaging
+                  {message.sender.userId === user._id && (
+                    <Avatar className="h-6 w-6 md:h-8 md:w-8 mt-1">
+                      <AvatarImage src={user?.profileImg} alt="Your avatar" />
+                      <AvatarFallback>{user?.fullName.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                  )}
+                </div>
+              ))}
+              {isTyping && <TypingIndicator />}
+              <div ref={messagesEndRef}></div>
             </div>
-          )}
+          </div>
+
+          {/* Footer - Fixed height */}
+          <div className="border-t h-[80px] min-h-[80px] p-2 md:p-3">
+            {selectedFile && (
+              <div className="mb-2 relative inline-block">
+                {previewUrl && (
+                  <img
+                    src={previewUrl || "/placeholder.svg"}
+                    alt="Preview"
+                    className="h-16 w-16 md:h-20 md:w-20 object-cover rounded-lg"
+                  />
+                )}
+                <button
+                  onClick={clearSelectedFile}
+                  className="absolute -top-1 -right-1 md:-top-2 md:-right-2 bg-red-500 text-white rounded-full p-1"
+                >
+                  <X className="h-3 w-3 md:h-4 md:w-4" />
+                </button>
+              </div>
+            )}
+            <form onSubmit={handleSendMessage} className="flex gap-2">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileSelect}
+                accept="image/jpeg,image/png,image/gif,video/mp4"
+                className="hidden"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 md:h-10 md:w-10"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <ImageIcon className="h-4 w-4 md:h-5 md:w-5 text-gray-500" />
+              </Button>
+              <Input
+                className="flex-1 text-xs md:text-sm h-8 md:h-10"
+                placeholder="Type your message"
+                value={inputMessage}
+                onChange={(e) => {
+                  setInputMessage(e.target.value)
+                  handleTyping()
+                }}
+                disabled={!!selectedFile}
+              />
+              <Button type="submit" className="bg-[#ff4f38] hover:bg-[#e63f2a] h-8 md:h-10 px-3 md:px-4">
+                <span className="hidden sm:inline text-xs md:text-sm">Send</span>
+                <Send className="h-4 w-4 sm:ml-2" />
+              </Button>
+            </form>
+          </div>
+        </>
+      ) : (
+        <div className="hidden md:flex flex-1 items-center justify-center text-gray-500 text-xs md:text-sm">
+          Select a chat to start messaging
         </div>
+      )}
+       </div>
       </div>
 
       <ComposeModal
