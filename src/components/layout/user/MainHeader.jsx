@@ -244,182 +244,211 @@ const MainHeader = ({ showModal, isLoggedIn }) => {
   );
 
   return (
-    <header className="bg-white dark:bg-slate-900 shadow-md py-3 px-4">
-      <div className="container max-w-[1850px] mx-auto">
-        <div className="flex items-center justify-between">
-          {/* Logo and Brand */}
-          <div className="flex items-center space-x-4">
-            <img onclick={()=>navigate("/")} src={logo} alt="Codemy Logo" className="w-8 hover:cursor-pointer" />
-            <h1 className="text-2xl font-bold text-black dark:text-white hidden sm:block">
-              Codemy
-            </h1>
-          </div>
+       <header className="bg-white dark:bg-slate-900 shadow-md py-3 px-4">
+    <div className="container max-w-[1850px] mx-auto">
+      <div className="flex items-center justify-between">
+        {/* Logo and Brand - Unchanged */}
+        <div className="flex items-center space-x-4">
+          <img
+            onClick={() => navigate("/")}
+            src={logo || "/placeholder.svg"}
+            alt="Codemy Logo"
+            className="w-8 hover:cursor-pointer"
+          />
+          <h1 className="text-2xl font-bold text-black dark:text-white hidden sm:block">Codemy</h1>
+        </div>
 
-          {/* Search Bar - Desktop */}
-          <div className="hidden md:flex relative flex-1 max-w-xl mx-4">
-            <Search
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500"
-              size={18}
-            />
-            <input
-              type="text"
-              placeholder="What do you want to learn..."
-              className="pl-10 pr-4 py-2 w-full bg-gray-100 dark:bg-gray-700 rounded-full text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500 transition duration-300"
-            />
-          </div>
+        {/* Search Bar - Desktop - Unchanged */}
+        <div className="hidden md:flex relative flex-1 max-w-xl mx-4">
+          <Search
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500"
+            size={18}
+          />
+          <input
+            type="text"
+            placeholder="What do you want to learn..."
+            className="pl-10 pr-4 py-2 w-full bg-gray-100 dark:bg-gray-700 rounded-full text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500 transition duration-300"
+          />
+        </div>
 
-          {/* Mobile Navigation */}
-          <div className="flex md:hidden">
-            <div className="flex items-center space-x-2">
-              <ThemeToggle />
-            </div>
-            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsSheetOpen(true)}
-                >
-                  <Menu className="h-5 w-5 text-gray-700 dark:text-gray-300" />
-                  <span className="sr-only">Open menu</span>
-                </Button>
-              </SheetTrigger>
-
-              <SheetContent
-                side="left"
-                className="w-[300px] p-0 bg-white dark:bg-gray-800"
+        {/* Mobile Navigation - Improved */}
+        <div className="flex md:hidden items-center gap-3">
+          {/* Cart and Wishlist for Mobile */}
+          {user && (
+            <>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate("/user/wishlist")}
+                className="relative h-9 w-9"
               >
-                <div className="flex flex-col h-full">
-                  {/* Header */}
-                  <div className="border-b dark:border-gray-700 p-4">
-                    <SheetHeader className="mb-2">
-                      <SheetTitle className="text-black dark:text-white">
-                        Menu
-                      </SheetTitle>
-                    </SheetHeader>
+                <Heart className="h-[18px] w-[18px] text-gray-700 dark:text-gray-300" />
+                {wishlist?.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-[#ff6738] text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                    {wishlist?.length}
+                  </span>
+                )}
+              </Button>
+              <Button variant="ghost" size="icon" onClick={() => navigate("/user/cart")} className="relative h-9 w-9">
+                <ShoppingCart className="h-[18px] w-[18px] text-gray-700 dark:text-gray-300" />
+                {cart?.items?.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-[#ff6738] text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                    {cart?.items?.length}
+                  </span>
+                )}
+              </Button>
+            </>
+          )}
 
-                    {/* Search */}
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground dark:text-gray-400" />
-                      <Input
-                        placeholder="Search..."
-                        className="pl-9 bg-muted dark:bg-gray-700 text-black dark:text-white"
-                      />
-                    </div>
-                  </div>
+          <ThemeToggle />
 
-                  {/* Content */}
-                  <div className="flex-1 overflow-auto">
-                    {/* Auth Section */}
-                    <div className="p-4 border-b dark:border-gray-700">
-                      {!user ? (
-                        <div className="space-y-2">
-                          <Button
-                            variant="outline"
-                            className="w-full justify-center dark:border-gray-600 dark:text-white"
-                            onClick={() => navigate("/signup")}
-                          >
-                            Create Account
-                          </Button>
-                          <Button
-                            className="w-full justify-center bg-orange-500 text-white hover:bg-orange-600"
-                            onClick={() => navigate("/login")}
-                          >
-                            Sign In
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="space-y-4">
-                          {/* User Profile */}
-                          <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 dark:bg-gray-700">
-                            <Avatar>
-                              <img
-                                crossOrigin="anonymous"
-                                referrerPolicy="no-referrer"
-                                src={user.profileImg || defProfile}
-                                alt={user.userName}
-                              />
-                              <AvatarFallback>
-                                {user.userName?.[0]}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="min-w-0">
-                              <p className="font-medium truncate text-black dark:text-white">
-                                {user.userName}
-                              </p>
-                              <p className="text-sm text-muted-foreground dark:text-gray-400 truncate">
-                                {user.email}
-                              </p>
-                            </div>
-                          </div>
+          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-9 w-9" onClick={() => setIsSheetOpen(true)}>
+                <Menu className="h-[18px] w-[18px] text-gray-700 dark:text-gray-300" />
+                <span className="sr-only">Open menu</span>
+              </Button>
+            </SheetTrigger>
 
-                          {/* User Actions */}
-                          <div className="space-y-1">
-                            <Button
-                              variant="ghost"
-                              className="w-full justify-start hover:bg-muted/50 dark:hover:bg-gray-700"
-                              onClick={() => navigate("/user/profile")}
-                            >
-                              <User className="mr-2 h-4 w-4 text-gray-700 dark:text-gray-300" />
-                              Profile
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              className="w-full justify-start hover:bg-muted/50 dark:hover:bg-gray-700"
-                              onClick={() => navigate("/user/wishlist")}
-                            >
-                              <Heart className="mr-2 h-4 w-4 text-gray-700 dark:text-gray-300" />
-                              Wishlist
-                              {wishlist?.length > 0 && (
-                                <Badge
-                                  variant="secondary"
-                                  className="ml-auto bg-primary text-primary-foreground dark:bg-orange-500 dark:text-white"
-                                >
-                                  {wishlist?.length}
-                                </Badge>
-                              )}
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              className="w-full justify-start hover:bg-muted/50 dark:hover:bg-gray-700"
-                              onClick={() => navigate("/user/cart")}
-                            >
-                              <ShoppingCart className="mr-2 h-4 w-4 text-gray-700 dark:text-gray-300" />
-                              Cart
-                              {cart?.items?.length > 0 && (
-                                <Badge
-                                  variant="secondary"
-                                  className="ml-auto bg-primary text-primary-foreground dark:bg-orange-500 dark:text-white"
-                                >
-                                  {cart.items?.length}
-                                </Badge>
-                              )}
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              className="w-full justify-start text-destructive hover:bg-destructive/10 hover:text-destructive dark:text-red-500 dark:hover:bg-red-500/10"
-                              onClick={handleLogout}
-                            >
-                              <LogOut className="mr-2 h-4 w-4" />
-                              Logout
-                            </Button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
+            <SheetContent side="left" className="w-[300px] p-0 bg-white dark:bg-gray-800">
+              <div className="flex flex-col h-full">
+                {/* Mobile Sheet Header */}
+                <div className="border-b dark:border-gray-700 p-4 space-y-4">
+                  <SheetHeader>
+                    <SheetTitle className="text-xl font-semibold text-black dark:text-white">Menu</SheetTitle>
+                  </SheetHeader>
 
-                    {/* Navigation Links */}
-                    <div className="p-4">
-                      <NavLinks onClick={() => setIsSheetOpen(false)} />
-                    </div>
+                  {/* Mobile Search - Improved */}
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <input
+                      type="text"
+                      placeholder="Search courses..."
+                      className="w-full pl-10 pr-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    />
                   </div>
                 </div>
-              </SheetContent>
-            </Sheet>
-          </div>
 
-          {/* Desktop Navigation */}
-          {!user ? (
+                {/* Content */}
+                <div className="flex-1 overflow-auto">
+                  {/* Auth Section - Improved Layout */}
+                  <div className="p-4 border-b dark:border-gray-700">
+                    {!user ? (
+                      <div className="space-y-3">
+                        <Button
+                          variant="outline"
+                          className="w-full justify-center h-10 dark:border-gray-600 dark:text-white text-base"
+                          onClick={() => navigate("/signup")}
+                        >
+                          Create Account
+                        </Button>
+                        <Button
+                          className="w-full justify-center h-10 bg-orange-500 text-white hover:bg-orange-600 text-base"
+                          onClick={() => navigate("/login")}
+                        >
+                          Sign In
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {/* User Profile - Improved */}
+                        <div className="flex items-center gap-3 p-4 rounded-xl bg-gray-50 dark:bg-gray-700/50">
+                          <Avatar className="h-12 w-12 border-2 border-orange-500">
+                            <img
+                              crossOrigin="anonymous"
+                              referrerPolicy="no-referrer"
+                              src={user.profileImg || defProfile}
+                              alt={user.userName}
+                              className="object-cover"
+                            />
+                            <AvatarFallback>{user.userName?.[0]}</AvatarFallback>
+                          </Avatar>
+                          <div className="min-w-0">
+                            <p className="font-semibold truncate text-base text-black dark:text-white">
+                              {user.userName}
+                            </p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
+                          </div>
+                        </div>
+
+                        {/* User Actions - Improved */}
+                        <nav className="space-y-1">
+                          <Button
+                            variant="ghost"
+                            className="w-full justify-start h-11 text-base hover:bg-gray-100 dark:hover:bg-gray-700"
+                            onClick={() => {
+                              navigate("/user/profile")
+                              setIsSheetOpen(false)
+                            }}
+                          >
+                            <User className="mr-3 h-5 w-5 text-gray-700 dark:text-gray-300" />
+                            Profile
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            className="w-full justify-start h-11 text-base hover:bg-gray-100 dark:hover:bg-gray-700"
+                            onClick={() => {
+                              navigate("/user/wishlist")
+                              setIsSheetOpen(false)
+                            }}
+                          >
+                            <Heart className="mr-3 h-5 w-5 text-gray-700 dark:text-gray-300" />
+                            Wishlist
+                            {wishlist?.length > 0 && (
+                              <span className="ml-auto bg-[#ff6738] text-white text-xs font-bold rounded-full min-w-[20px] h-[20px] flex items-center justify-center px-1">
+                                {wishlist?.length}
+                              </span>
+                            )}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            className="w-full justify-start h-11 text-base hover:bg-gray-100 dark:hover:bg-gray-700"
+                            onClick={() => {
+                              navigate("/user/cart")
+                              setIsSheetOpen(false)
+                            }}
+                          >
+                            <ShoppingCart className="mr-3 h-5 w-5 text-gray-700 dark:text-gray-300" />
+                            Cart
+                            {cart?.items?.length > 0 && (
+                              <span className="ml-auto bg-[#ff6738] text-white text-xs font-bold rounded-full min-w-[20px] h-[20px] flex items-center justify-center px-1">
+                                {cart?.items?.length}
+                              </span>
+                            )}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            className="w-full justify-start h-11 text-base text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10"
+                            onClick={() => {
+                              handleLogout()
+                              setIsSheetOpen(false)
+                            }}
+                          >
+                            <LogOut className="mr-3 h-5 w-5" />
+                            Logout
+                          </Button>
+                        </nav>
+
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Navigation Links - Improved */}
+                  <div className="p-4">
+                    <NavLinks
+                      onClick={() => setIsSheetOpen(false)}
+                      className="space-y-1 [&>a]:h-11 [&>a]:text-base [&>a]:justify-start [&>a]:hover:bg-gray-100 dark:[&>a]:hover:bg-gray-700"
+                    />
+                  </div>
+              
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+
+        {/* Desktop Navigation - Unchanged */}
+        {!user ? (
             <div className="hidden md:flex items-center gap-4">
               <div className="flex items-center space-x-2">
                 <ThemeToggle />
@@ -625,9 +654,8 @@ const MainHeader = ({ showModal, isLoggedIn }) => {
               </div>
             </div>
           )}
-        </div>
       </div>
-
+    </div>
       {/* Notification Detail Modal */}
       <NotificationDetailModal
         notification={selectedNotification}
@@ -637,7 +665,7 @@ const MainHeader = ({ showModal, isLoggedIn }) => {
           setSelectedNotification(null);
         }}
       />
-    </header>
+  </header>
   );
 };
 
