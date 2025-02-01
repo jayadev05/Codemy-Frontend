@@ -2,7 +2,7 @@
 import animatePlugin from "tailwindcss-animate";
 
 export default {
-  darkMode: ["class", "class"],
+  darkMode: ["class"],
   content: [
     "./index.html",
     "./src/**/*.{js,jsx,ts,tsx}",
