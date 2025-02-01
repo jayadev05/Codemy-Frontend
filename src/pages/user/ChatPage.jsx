@@ -1057,324 +1057,307 @@ const handleEndCall = (sendSocketEvent = true) => {
       <MainHeader />
       <Tabs />
       {/* Chat Container */}
-      <div className="flex h-[calc(100vh-90px)] bg-white">
-        {/* Chat List */}
-        <div
-          className={`${
-            selectedChat ? "hidden" : "w-full"
-          } md:block md:w-80 border-r flex flex-col`}
+     <div className="flex h-screen bg-white">
+
+  {/* Chat List */}
+  <div className={`${selectedChat ? "hidden" : "w-full"} md:block md:w-80 border-r flex flex-col`}>
+    <div className="p-3 lg:p-4 border-b">
+      <div className="flex items-center justify-between mb-3">
+        <h1 className="text-lg font-semibold">Chat</h1>
+        <Button
+          className="bg-blue-100 hover:bg-blue-200 text-blue-700 text-sm"
+          size="sm"
+          onClick={() => setComposeOpen(true)}
         >
-          <div className="p-3 lg:p-4 border-b">
-            <div className="flex items-center justify-between mb-3">
-              <h1 className="text-lg font-semibold">Chat</h1>
-              <Button
-                className="bg-blue-100 hover:bg-blue-200 text-blue-700 text-sm"
-                size="sm"
-                onClick={() => setComposeOpen(true)}
+          + Compose
+        </Button>
+      </div>
+      <div className="relative">
+        <Input
+          className="pl-8 bg-gray-50 text-sm"
+          placeholder="Search"
+          type="search"
+        />
+        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+      </div>
+    </div>
+
+    <ScrollArea className="flex-1">
+      <div className="divide-y">
+        {chats
+          .filter((chat) => {
+            return (
+              chat &&
+              chat._id &&
+              ((userType === "user" && chat.tutorId) ||
+                (userType === "tutor" && chat.userId))
+            );
+          })
+          .map((chat) => {
+            const otherUser =
+              userType === "user" ? chat.tutorId : chat.userId;
+
+            if (!otherUser) return null;
+
+            return (
+              <div
+                key={chat._id}
+                className={`p-4 hover:bg-gray-50 cursor-pointer ${
+                  selectedChat?._id === chat._id ? "bg-orange-50" : ""
+                }`}
+                onClick={() => handleChatSelect(chat)}
               >
-                + Compose
-              </Button>
-            </div>
-            <div className="relative">
-              <Input
-                className="pl-8 bg-gray-50 text-sm"
-                placeholder="Search"
-                type="search"
-              />
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-            </div>
-          </div>
-
-          <ScrollArea className="flex-1">
-            <div className="divide-y">
-              {chats
-                .filter((chat) => {
-                  return (
-                    chat &&
-                    chat._id &&
-                    ((userType === "user" && chat.tutorId) ||
-                      (userType === "tutor" && chat.userId))
-                  );
-                })
-                .map((chat) => {
-                  const otherUser =
-                    userType === "user" ? chat.tutorId : chat.userId;
-
-                  // Additional validation to ensure otherUser exists
-                  if (!otherUser) {
-                    return null;
-                  }
-
-                  return (
-                    <div
-                      key={chat._id}
-                      className={`p-4 hover:bg-gray-50 cursor-pointer ${
-                        selectedChat?._id === chat._id ? "bg-orange-50" : ""
-                      }`}
-                      onClick={() => handleChatSelect(chat)}
-                    >
-                      <div className="flex gap-3">
-                        <div className="relative">
-                          <Avatar className="h-12 w-12">
-                            {otherUser?.profileImg ? (
-                              <AvatarImage
-                                referrerPolicy="no-referrer"
-                                crossOrigin="anonymous"
-                                src={otherUser?.profileImg}
-                                alt={`${
-                                  otherUser?.fullName || "User"
-                                }'s avatar`}
-                                onError={(e) => {
-                                  e.target.src = "/placeholder.svg"; // Fallback image
-                                }}
-                              />
-                            ) : (
-                              <AvatarFallback>
-                                {(otherUser?.fullName || "?").charAt(0)}
-                              </AvatarFallback>
-                            )}
-                          </Avatar>
-                          <span
-                            className={`absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-white ${
-                              chat.isOnline?.[
-                                userType === "user" ? "tutor" : "student"
-                              ]
-                                ? "bg-green-500"
-                                : "bg-gray-300"
-                            }`}
-                          />
-                        </div>
-                        <div className="flex-1 overflow-hidden">
-                          <div className="flex items-center justify-between">
-                            <h3 className="font-semibold truncate">
-                              {otherUser?.fullName || "Unknown User"}
-                            </h3>
-                            <span className="text-xs text-gray-500">
-                              {chat.lastMessage?.timestamp &&
-                                formatTime(chat.lastMessage.timestamp)}
-                            </span>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <p className="text-sm text-gray-600 truncate">
-                              {chat.lastMessage?.contentType === "media"
-                                ? `Media 📷`
-                                : chat.lastMessage?.content ||
-                                  "Start a conversation"}
-                            </p>
-                            {chat.unreadCount?.[
-                              userType === "user" ? "student" : "tutor"
-                            ] > 0 && (
-                              <p className="text-xs bg-orange-400 px-[9px] py-[3px] rounded-full text-white">
-                                {
-                                  chat.unreadCount[
-                                    userType === "user" ? "student" : "tutor"
-                                  ]
-                                }
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
-          </ScrollArea>
-        </div>
-
-        {/* Chat Area */}
-           <div
-      className={`${!selectedChat ? "hidden" : "flex flex-col w-full"} md:flex md:flex-1 h-screen max-h-screen`} // Fixed height to screen
-    >
-      {selectedChat ? (
-        <>
-          {/* Header - Fixed height */}
-          <div className="flex items-center justify-between p-3 md:p-4 border-b bg-background z-10 h-[60px] min-h-[60px]">
-            <div className="flex items-center gap-2 md:gap-3">
-              <button className="md:hidden" onClick={() => setSelectedChat(null)}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 md:h-6 md:w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <div className="relative">
-                <Avatar className="h-8 w-8 md:h-10 md:w-10">
-                  <img
-                    crossOrigin="anonymous"
-                    referrerPolicy="no-referrer"
-                    src={userType === "user" ? selectedChat.tutorId?.profileImg : selectedChat.userId?.profileImg}
-                    alt="Chat partner's avatar"
-                  />
-                  <AvatarFallback>
-                    {userType === "user"
-                      ? selectedChat.tutorId?.fullName?.charAt(0)
-                      : selectedChat.userId?.fullName?.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-              <div>
-                <h2 className="font-semibold text-sm md:text-base">
-                  {userType === "user" ? selectedChat.tutorId?.fullName : selectedChat.userId?.fullName}
-                </h2>
-                <p
-                  className={`text-xs md:text-sm ${
-                    selectedChat.isOnline[userType === "user" ? "tutor" : "student"]
-                      ? "text-green-600"
-                      : "text-gray-500"
-                  }`}
-                >
-                  {selectedChat.isOnline[userType === "user" ? "tutor" : "student"] ? "Online" : "Offline"}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 md:gap-3">
-              <Video className="cursor-pointer h-5 w-5 md:h-6 md:w-6" onClick={initiateCall} />
-              <div className="relative">
-                <Button
-                  onClick={() => handleOptionsModalOpen()}
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 md:h-10 md:w-10"
-                >
-                  <MoreHorizontal className="h-5 w-5 md:h-6 md:w-6" />
-                </Button>
-                {optionsModalOpen && (
-                  <div className="absolute right-0 md:right-4 mt-2 w-44 md:w-48 bg-white rounded-lg shadow-lg py-1 z-50 border border-gray-200">
-                    <button className="flex items-center px-3 md:px-4 py-2 text-xs md:text-sm text-gray-700 hover:bg-orange-50 w-full transition-colors">
-                      <AlertTriangle className="w-4 h-4 mr-2 text-orange-500" />
-                      Block Tutor
-                    </button>
-                    <button
-                      onClick={handleDeleteChat}
-                      className="flex items-center px-3 md:px-4 py-2 text-xs md:text-sm text-gray-700 hover:bg-orange-50 w-full transition-colors"
-                    >
-                      <Trash2Icon className="w-4 h-4 mr-2 text-orange-500" />
-                      Delete chat
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Messages area - Scrollable, takes remaining height */}
-          <div className="flex-1 overflow-y-auto">
-            <div className="space-y-2 md:space-y-3 p-2 md:p-3">
-              {messages.map((message) => (
-                <div
-                  key={message._id}
-                  className={`flex gap-2 max-w-[80%] md:max-w-[85%] ${
-                    message.sender.userId === user._id ? "justify-end ml-auto" : ""
-                  }`}
-                >
-                  {message.sender.userId !== user._id && (
-                    <Avatar className="h-6 w-6 md:h-8 md:w-8 mt-1">
-                      <img
-                        crossOrigin="anonymous"
-                        referrerPolicy="no-referrer"
-                        src={userType === "user" ? selectedChat.tutorId?.profileImg : selectedChat.userId?.profileImg}
-                        alt="Sender's avatar"
-                      />
-                      <AvatarFallback>
-                        {userType === "tutor"
-                          ? selectedChat.tutorId?.fullName?.charAt(0)
-                          : selectedChat.userId?.fullName?.charAt(0)}
-                      </AvatarFallback>
+                <div className="flex gap-3">
+                  <div className="relative">
+                    <Avatar className="h-12 w-12">
+                      {otherUser?.profileImg ? (
+                        <AvatarImage
+                          referrerPolicy="no-referrer"
+                          crossOrigin="anonymous"
+                          src={otherUser?.profileImg}
+                          alt={`${otherUser?.fullName || "User"}'s avatar`}
+                        />
+                      ) : (
+                        <AvatarFallback>
+                          {(otherUser?.fullName || "?").charAt(0)}
+                        </AvatarFallback>
+                      )}
                     </Avatar>
-                  )}
-                  <div>
-                    <div
-                      className={`rounded-2xl p-2 md:p-3 text-xs md:text-sm ${
-                        message.sender.userId === user._id ? "bg-[#ff6738] text-white" : "bg-[#ffeee8]"
+                    <span
+                      className={`absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-white ${
+                        chat.isOnline?.[
+                          userType === "user" ? "tutor" : "student"
+                        ]
+                          ? "bg-green-500"
+                          : "bg-gray-300"
                       }`}
-                    >
-                      {renderMessageContent(message)}
-                    </div>
-                    <div className="flex mt-1">
-                      {message.sender.userId === user._id && <MessageStatus status={message.status} />}
-                      <span className="text-[10px] md:text-xs text-gray-500 ml-2">
-                        {formatTime(message.createdAt || message.timestamps)}
+                    />
+                  </div>
+                  <div className="flex-1 overflow-hidden">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-semibold truncate">
+                        {otherUser?.fullName || "Unknown User"}
+                      </h3>
+                      <span className="text-xs text-gray-500">
+                        {chat.lastMessage?.timestamp &&
+                          formatTime(chat.lastMessage.timestamp)}
                       </span>
                     </div>
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm text-gray-600 truncate">
+                        {chat.lastMessage?.contentType === "media"
+                          ? "Media 📷"
+                          : chat.lastMessage?.content || "Start a conversation"}
+                      </p>
+                      {chat.unreadCount?.[
+                        userType === "user" ? "student" : "tutor"
+                      ] > 0 && (
+                        <p className="text-xs bg-orange-400 px-[9px] py-[3px] rounded-full text-white">
+                          {
+                            chat.unreadCount[
+                              userType === "user" ? "student" : "tutor"
+                            ]
+                          }
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  {message.sender.userId === user._id && (
-                    <Avatar className="h-6 w-6 md:h-8 md:w-8 mt-1">
-                      <AvatarImage src={user?.profileImg} alt="Your avatar" />
-                      <AvatarFallback>{user?.fullName.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                  )}
                 </div>
-              ))}
-              {isTyping && <TypingIndicator />}
-              <div ref={messagesEndRef}></div>
+              </div>
+            );
+          })}
+      </div>
+    </ScrollArea>
+  </div>
+
+  {/* Chat Area */}
+  <div className={`${!selectedChat ? "hidden" : "flex flex-col w-full h-screen"} md:flex md:flex-1`}>
+    {selectedChat ? (
+      <>
+        {/* Header */}
+        <div className="flex items-center justify-between p-3 md:p-4 border-b sticky top-0 bg-white z-10">
+          <div className="flex items-center gap-2 md:gap-3">
+            <button className="md:hidden" onClick={() => setSelectedChat(null)}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 md:h-6 md:w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <div className="relative">
+              <Avatar className="h-8 w-8 md:h-10 md:w-10">
+                <img
+                  crossOrigin="anonymous"
+                  referrerPolicy="no-referrer"
+                  src={userType === "user" ? selectedChat.tutorId?.profileImg : selectedChat.userId?.profileImg}
+                  alt="Chat partner's avatar"
+                />
+                <AvatarFallback>
+                  {userType === "user"
+                    ? selectedChat.tutorId?.fullName?.charAt(0)
+                    : selectedChat.userId?.fullName?.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+            </div>
+            <div>
+              <h2 className="font-semibold text-sm md:text-base">
+                {userType === "user" ? selectedChat.tutorId?.fullName : selectedChat.userId?.fullName}
+              </h2>
+              <p className={`text-xs md:text-sm ${
+                selectedChat.isOnline[userType === "user" ? "tutor" : "student"]
+                  ? "text-green-600"
+                  : "text-gray-500"
+              }`}>
+                {selectedChat.isOnline[userType === "user" ? "tutor" : "student"] ? "Online" : "Offline"}
+              </p>
             </div>
           </div>
-
-          {/* Footer - Fixed height */}
-          <div className="border-t h-[80px] min-h-[80px] p-2 md:p-3">
-            {selectedFile && (
-              <div className="mb-2 relative inline-block">
-                {previewUrl && (
-                  <img
-                    src={previewUrl || "/placeholder.svg"}
-                    alt="Preview"
-                    className="h-16 w-16 md:h-20 md:w-20 object-cover rounded-lg"
-                  />
-                )}
-                <button
-                  onClick={clearSelectedFile}
-                  className="absolute -top-1 -right-1 md:-top-2 md:-right-2 bg-red-500 text-white rounded-full p-1"
-                >
-                  <X className="h-3 w-3 md:h-4 md:w-4" />
-                </button>
-              </div>
-            )}
-            <form onSubmit={handleSendMessage} className="flex gap-2">
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileSelect}
-                accept="image/jpeg,image/png,image/gif,video/mp4"
-                className="hidden"
-              />
+          <div className="flex items-center gap-2 md:gap-3">
+            <Video className="cursor-pointer h-5 w-5 md:h-6 md:w-6" onClick={initiateCall} />
+            <div className="relative">
               <Button
-                type="button"
+                onClick={() => handleOptionsModalOpen()}
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 md:h-10 md:w-10"
-                onClick={() => fileInputRef.current?.click()}
               >
-                <ImageIcon className="h-4 w-4 md:h-5 md:w-5 text-gray-500" />
+                <MoreHorizontal className="h-5 w-5 md:h-6 md:w-6" />
               </Button>
-              <Input
-                className="flex-1 text-xs md:text-sm h-8 md:h-10"
-                placeholder="Type your message"
-                value={inputMessage}
-                onChange={(e) => {
-                  setInputMessage(e.target.value)
-                  handleTyping()
-                }}
-                disabled={!!selectedFile}
-              />
-              <Button type="submit" className="bg-[#ff4f38] hover:bg-[#e63f2a] h-8 md:h-10 px-3 md:px-4">
-                <span className="hidden sm:inline text-xs md:text-sm">Send</span>
-                <Send className="h-4 w-4 sm:ml-2" />
-              </Button>
-            </form>
+              {optionsModalOpen && (
+                <div className="absolute right-0 md:right-4 mt-2 w-44 md:w-48 bg-white rounded-lg shadow-lg py-1 z-50 border border-gray-200">
+                  <button className="flex items-center px-3 md:px-4 py-2 text-xs md:text-sm text-gray-700 hover:bg-orange-50 w-full transition-colors">
+                    <AlertTriangle className="w-4 h-4 mr-2 text-orange-500" />
+                    Block Tutor
+                  </button>
+                  <button
+                    onClick={handleDeleteChat}
+                    className="flex items-center px-3 md:px-4 py-2 text-xs md:text-sm text-gray-700 hover:bg-orange-50 w-full transition-colors"
+                  >
+                    <Trash2Icon className="w-4 h-4 mr-2 text-orange-500" />
+                    Delete chat
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        </>
-      ) : (
-        <div className="hidden md:flex flex-1 items-center justify-center text-gray-500 text-xs md:text-sm">
-          Select a chat to start messaging
         </div>
-      )}
-       </div>
+
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="space-y-2 md:space-y-3 p-2 md:p-3">
+            {messages.map((message) => (
+              <div
+                key={message._id}
+                className={`flex gap-2 max-w-[80%] md:max-w-[85%] ${
+                  message.sender.userId === user._id ? "justify-end ml-auto" : ""
+                }`}
+              >
+                {message.sender.userId !== user._id && (
+                  <Avatar className="h-6 w-6 md:h-8 md:w-8 mt-1">
+                    <img
+                      crossOrigin="anonymous"
+                      referrerPolicy="no-referrer"
+                      src={userType === "user" ? selectedChat.tutorId?.profileImg : selectedChat.userId?.profileImg}
+                      alt="Sender's avatar"
+                    />
+                    <AvatarFallback>
+                      {userType === "tutor"
+                        ? selectedChat.tutorId?.fullName?.charAt(0)
+                        : selectedChat.userId?.fullName?.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                )}
+                <div>
+                  <div className={`rounded-2xl p-2 md:p-3 text-xs md:text-sm ${
+                    message.sender.userId === user._id ? "bg-[#ff6738] text-white" : "bg-[#ffeee8]"
+                  }`}>
+                    {renderMessageContent(message)}
+                  </div>
+                  <div className="flex mt-1">
+                    {message.sender.userId === user._id && <MessageStatus status={message.status} />}
+                    <span className="text-[10px] md:text-xs text-gray-500 ml-2">
+                      {formatTime(message.createdAt || message.timestamps)}
+                    </span>
+                  </div>
+                </div>
+                {message.sender.userId === user._id && (
+                  <Avatar className="h-6 w-6 md:h-8 md:w-8 mt-1">
+                    <AvatarImage src={user?.profileImg} alt="Your avatar" />
+                    <AvatarFallback>{user?.fullName.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                )}
+              </div>
+            ))}
+            {isTyping && <TypingIndicator />}
+            <div ref={messagesEndRef}></div>
+          </div>
+        </div>
+
+        {/* Input Area */}
+        <div className="p-2 md:p-3 border-t">
+          {selectedFile && (
+            <div className="mb-2 relative inline-block">
+              {previewUrl && (
+                <img
+                  src={previewUrl || "/placeholder.svg"}
+                  alt="Preview"
+                  className="h-16 w-16 md:h-20 md:w-20 object-cover rounded-lg"
+                />
+              )}
+              <button
+                onClick={clearSelectedFile}
+                className="absolute -top-1 -right-1 md:-top-2 md:-right-2 bg-red-500 text-white rounded-full p-1"
+              >
+                <X className="h-3 w-3 md:h-4 md:w-4" />
+              </button>
+            </div>
+          )}
+          <form onSubmit={handleSendMessage} className="flex gap-2">
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileSelect}
+              accept="image/jpeg,image/png,image/gif,video/mp4"
+              className="hidden"
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 md:h-10 md:w-10"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <ImageIcon className="h-4 w-4 md:h-5 md:w-5 text-gray-500" />
+            </Button>
+            <Input
+              className="flex-1 text-xs md:text-sm h-8 md:h-10"
+              placeholder="Type your message"
+              value={inputMessage}
+              onChange={(e) => {
+                setInputMessage(e.target.value);
+                handleTyping();
+              }}
+              disabled={!!selectedFile}
+            />
+            <Button type="submit" className="bg-[#ff4f38] hover:bg-[#e63f2a] h-8 md:h-10 px-3 md:px-4">
+              <span className="hidden sm:inline text-xs md:text-sm">Send</span>
+              <Send className="h-4 w-4 sm:ml-2" />
+            </Button>
+          </form>
+        </div>
+      </>
+    ) : (
+      <div className="hidden md:flex flex-1 items-center justify-center text-gray-500 text-xs md:text-sm">
+        Select a chat to start messaging
       </div>
+    )}
+  </div>
+
+</div>
 
       <ComposeModal
         open={composeOpen}
