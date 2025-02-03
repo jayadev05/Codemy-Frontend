@@ -538,39 +538,53 @@ export default function CoursePlayer() {
 
               {/* report option  */}
 
-              <div className="relative">
-                <button
-                  onClick={() => setIsMenuOpen(!isMenuOpen)}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                >
-                  <MoreVertical className="w-5 h-5 text-gray-600" />
-                </button>
-                {isMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50 border border-gray-200">
-                    <button
-                      onClick={() => openReportModal("Course")}
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 w-full transition-colors"
+             <div className="relative">
+                  <button
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  >
+                    <MoreVertical className="w-5 h-5 text-gray-600" />
+                  </button>
+                  {isMenuOpen && (
+                    <div
+                      className="fixed lg:right-4 lg:top-28 right-12 top-36 bottom-0 z-50 bg-transparent"
+                      onClick={() => setIsMenuOpen(false)}
                     >
-                      <AlertTriangle className="w-4 h-4 mr-2 text-orange-500" />
-                      Report Course
-                    </button>
-                    <button
-                      onClick={() => openReportModal("Tutor")}
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 w-full transition-colors"
-                    >
-                      <AlertTriangle className="w-4 h-4 mr-2 text-orange-500" />
-                      Report Tutor
-                    </button>
-                  </div>
-                )}
-                <ReportModal
-                  isOpen={isReportModalOpen}
-                  onClose={() => setIsReportModalOpen(false)}
-                  targetType={reportTargetType}
-                  targetId={reportTargetId}
-                  reportedBy={user._id}
-                />
-              </div>
+                      <div
+                        className="absolute right-4 top-16 w-48 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <button
+                          onClick={() => {
+                            openReportModal("Course");
+                            setIsMenuOpen(false);
+                          }}
+                          className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 transition-colors"
+                        >
+                          <AlertTriangle className="w-4 h-4 mr-2 text-orange-500" />
+                          Report Course
+                        </button>
+                        <button
+                          onClick={() => {
+                            openReportModal("Tutor");
+                            setIsMenuOpen(false);
+                          }}
+                          className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 transition-colors"
+                        >
+                          <AlertTriangle className="w-4 h-4 mr-2 text-orange-500" />
+                          Report Tutor
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  <ReportModal
+                    isOpen={isReportModalOpen}
+                    onClose={() => setIsReportModalOpen(false)}
+                    targetType={reportTargetType}
+                    targetId={reportTargetId}
+                    reportedBy={user._id}
+                  />
+                </div>
             </div>
 
             </div>
