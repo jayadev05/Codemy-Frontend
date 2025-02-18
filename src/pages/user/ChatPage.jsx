@@ -410,6 +410,7 @@ useEffect(() => {
     try {
       setLoading(true);
 
+      const user = useSelector(selectUser);
       const courseIds=user?.activeCourses
       console.log("user",user)
       console.log(courseIds)
