@@ -220,6 +220,7 @@ export default function CheckoutPage() {
         dispatch(clearCart(cart));
         console.log("updatedUser",response.data.updatedUser)
         dispatch(addUser(response.data.updatedUser));
+        console.log(user)
         toast.success("Course purchased successfully!");
       }
     } catch (error) {
