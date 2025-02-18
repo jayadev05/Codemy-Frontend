@@ -411,7 +411,8 @@ useEffect(() => {
       setLoading(true);
 
       const courseIds=user?.activeCourses
-
+      console.log("user",user)
+      console.log(courseIds)
       const response = await axiosInstance.get("/chat/tutors", {
         params: { courseIds },
       });
