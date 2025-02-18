@@ -36,6 +36,7 @@ import VideoCallInterface from "@/components/layout/videoCall/VideoCallIInterfac
 
 export default function ChatInterface() {
   const user = useSelector(selectUser);
+  console.log(user)
 
   const [chats, setChats] = useState([]);
   const [messages, setMessages] = useState([]);
